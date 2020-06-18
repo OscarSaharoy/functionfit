@@ -21,7 +21,7 @@
 
 		<div class="graph-box">
 			<h3> Place points on the graph: </h3>
-			<canvas width=600 height=350> </canvas>
+			<canvas width=600 height=350 id="canvas"> </canvas>
 			<script src="canvasgraph.js" type="text/javascript"> </script>
 		</div>	
 
@@ -35,8 +35,6 @@
 				<button> bell curve </button>
 			</ol>
 			<div class="options">
-				<h3> Stretch and shift </h3>
-				<input type="checkbox">
 				<h3> Number of terms </h3>
 				<input value="3">
 			</div>
@@ -44,11 +42,11 @@
 
 		<div class="function-box">
 			<h3> Optimized function: </h3>
-			<span> </span>
+			<span id="mathspan"> \[x = {-b \pm \sqrt{ b^2 -4ac} \over 2a}\] </span>
 		</div>
 
 		<div class="code-box">
-			<h3> Your function code: </h3>
+			<h3> Function code: </h3>
 			<div class="codes">
 				<h4> C/C++ </h4>
 				<textarea></textarea>

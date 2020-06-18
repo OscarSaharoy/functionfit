@@ -53,7 +53,8 @@ h3 {
 
 canvas {
 	width: 100%;
-	height: auto;
+	height: 35rem;
+	padding-top: 2rem;
 }
 
 ol {
@@ -71,6 +72,7 @@ ol button {
 	border: 3px solid #30F35E;
 	border-radius: 1rem;
 	align-content: center;
+	cursor: pointer;
 }
 
 ol button:hover {
@@ -83,9 +85,11 @@ ol button:active {
 
 .options {
 	align-items: center;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
+	justify-self: center;
 	justify-items: left;
+	max-width: 20rem;
 	padding-bottom: 1rem;
+	grid-gap: 1rem;
 }
 
 .options h3 {
@@ -99,6 +103,13 @@ ol button:active {
 	border-radius: 1rem;
 	text-align: center;
 	width: 5rem;
+	justify-self: left;
+	font-family: "Comfortaa", sans-serif;
+	font-size: 1rem;
+}
+
+.options input:hover {
+	border: 3px solid #44EBF8;	
 }
 
 .codes {
@@ -125,9 +136,17 @@ ol button:active {
 	align-self: center;
 }
 
+.function-box span {
+	padding-top: 1rem;
+}
+
 a {
 	text-decoration: none;
 	color: #30F35E;
+}
+
+a:hover {
+	color: #44EBF8;
 }
 
 a:visited {
