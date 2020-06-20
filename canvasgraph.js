@@ -30,6 +30,7 @@ var mousePosY    = 0;
 
 // data variables
 var dataPoints   = [];
+var movingPoint  = -1;
  
 // spinning dot temp
 var b = 0;
@@ -53,26 +54,6 @@ function resize() {
 	canvasHeight  = rect.height * dpr;
 	canvas.width  = canvasWidth;
 	canvas.height = canvasHeight;
-}
-
-function mousemove(event) {
-
-	// get mousepos for display at top of graph
-	mousePosX = canvasToGraphX(event.offsetX*dpr);
-	mousePosY = canvasToGraphY(event.offsetY*dpr);
-
-	// handle panning the graph
-	if(mouseclicked) {
-
-		// set moved in click flag
-		movedInClick = true;
-
-		// shift corners of viewport
-		viewportCorners[0] -= canvasToGraphScaleX(event.movementX);
-		viewportCorners[2] -= canvasToGraphScaleX(event.movementX);
-		viewportCorners[1] -= canvasToGraphScaleY(event.movementY);
-		viewportCorners[3] -= canvasToGraphScaleY(event.movementY);
-	}
 }
 
 function wheel(event) {
@@ -109,39 +90,79 @@ function wheel(event) {
 	}
 }
 
-function click(event) {
+function mousedown(event) {
+
+	// set mouseclicked flag
+	mouseclicked = true;
+}
+
+function mousemove(event) {
+
+	// get mousepos for display at top of graph and close data point
+	mousePosX      = canvasToGraphX(event.offsetX*dpr);
+	mousePosY      = canvasToGraphY(event.offsetY*dpr);
+
+	// handle panning the graph
+	if(mouseclicked && closeDataPoint == -1) {
+
+		// set moved in click flag
+		movedInClick = true;
+
+		// shift corners of viewport
+		viewportCorners[0] -= canvasToGraphScaleX(event.movementX);
+		viewportCorners[2] -= canvasToGraphScaleX(event.movementX);
+		viewportCorners[1] -= canvasToGraphScaleY(event.movementY);
+		viewportCorners[3] -= canvasToGraphScaleY(event.movementY);
+	}
+
+	// handle moving close data point
+	else if(mouseclicked) {
+
+		// set moved in click flag
+		movedInClick = true;
+
+		// move close data point to under cursor
+		dataPoints[closeDataPoint].x = mousePosX;
+		dataPoints[closeDataPoint].y = mousePosY;
+	}
+
+	else {
+
+		// update close data point
+		closeDataPoint = getCloseDataPoint(mousePosX, mousePosY);
+
+		// if mouse is close to a point then change cursor to movey
+		canvas.style.cursor = closeDataPoint == -1 ? "auto" : "move";
+	}
+}
+
+function mouseup(event) {
 
 	// handle adding a point on click but only if the mouse didn't more during the click
 	if(!movedInClick) {
 
-		var removed = false;
+		if(closeDataPoint != -1) {
 
-		for(var [i, point] of Object.entries(dataPoints)) {
-
-			console.log(i, point);
-
-			// need to chanve to canbas space
-			if( (point.x-mousePosX)*(point.x-mousePosX) + (point.y-mousePosY)*(point.y-mousePosY) < rem*rem/4 ) {
-
-				dataPoints.splice(i, 1);
-				removed = true;
-			}
+			dataPoints.splice(closeDataPoint, 1);
 		}
-		
-		if(!removed) {
+		else {
 			dataPoints.push(new Point(mousePosX, mousePosY));
 		}
 	}
 
+	// set mouse flags
+	mouseclicked = false;
 	movedInClick = false;
+
+	// call mousemove to update cursor
+	mousemove(event);
 }
 
 // event listeners
 window.addEventListener("resize", resize);
-window.addEventListener("mousemove", mousemove);
-window.addEventListener("mousedown", () => (mouseclicked = true));
-window.addEventListener("mouseup",   () => (mouseclicked = false));
-window.addEventListener("click", click);
+canvas.addEventListener("mousemove", mousemove);
+canvas.addEventListener("mousedown", mousedown);
+canvas.addEventListener("mouseup", mouseup);
 
 // prevents page scrolling when mouse in canvas
 canvas.onwheel = (e) => {e.preventDefault();};
@@ -193,7 +214,7 @@ function draw() {
 	// gridlines in x and y
 	for(var x=xStart; x<viewportCorners[2]; x+=xGridSpacing) {
 
-		y = Math.abs(y)<1e-10 ? 0.0 : y;
+		x = Math.abs(x)<1e-10 ? 0.0 : x;
 
 		var lineAcross = graphToCanvasX(x);
 		ctx.beginPath();
@@ -228,8 +249,12 @@ function draw() {
 	// draw mouse position x and y in top corner
 	var text = mousePosX.toPrecision(3) + ", " + mousePosY.toPrecision(3);
 	var textWidth = ctx.measureText(text).width;
+
+	// draw white box behind
 	ctx.fillStyle = "white";
 	ctx.fillRect(canvasWidth-8-textWidth, 0, 8+textWidth, rem+8);
+
+	// draw numbers
 	ctx.fillStyle = "black";
 	ctx.fillText(text, canvasWidth-4-textWidth, rem+4);
 
@@ -249,6 +274,28 @@ function draw() {
 	}
 	
 	requestAnimationFrame(draw);
+}
+
+// get index of close dataPoint in the dataPoints array or -1 if none are close
+function getCloseDataPoint(x, y) {
+
+	// loop over data points
+	for(var i=0; i<dataPoints.length; ++i) {
+
+		point = dataPoints[i];
+
+		// scale distance to canvas space
+		var distX = graphToCanvasScaleX(point.x-x);
+		var distY = graphToCanvasScaleY(point.y-y);
+
+		// if point is close enough then return it
+		if( distX*distX + distY*distY < rem*rem/2 ) {
+
+			return i;
+		}
+	}
+	
+	return -1;
 }
 
 
@@ -271,6 +318,16 @@ function canvasToGraphX(canvasX) {
 function canvasToGraphY(canvasY) {
 
 	return (canvasY - canvasHeight / 2) * (viewportCorners[1] - viewportCorners[3]) / canvasHeight + (viewportCorners[1] + viewportCorners[3]) / 2;
+}
+
+function graphToCanvasScaleX(graphX) {
+
+	return graphX *  canvasWidth / (viewportCorners[2] - viewportCorners[0]);
+}
+
+function graphToCanvasScaleY(graphY) {
+
+	return graphY * canvasHeight / (viewportCorners[1] - viewportCorners[3]);
 }
 
 function canvasToGraphScaleX(canvasX) {
