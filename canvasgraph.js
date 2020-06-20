@@ -31,9 +31,6 @@ var mousePosY    = 0;
 // data variables
 var dataPoints   = [];
 var movingPoint  = -1;
- 
-// spinning dot temp
-var b = 0;
 
 // initial canvas resize & start draw loop
 resize();
@@ -105,6 +102,9 @@ function mousemove(event) {
 	// handle panning the graph
 	if(mouseclicked && closeDataPoint == -1) {
 
+		// set cursor to grabbing
+		canvas.style.cursor = "grabbing";
+
 		// set moved in click flag
 		movedInClick = true;
 
@@ -173,9 +173,6 @@ function draw() {
 	// cler canvas
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-	// spinning dot test
-	b += 0.05;
-
 	// get origin x and y pos limited to viewport extents
 	var originX = 0 <= viewportCorners[0] ? viewportCorners[0] : (0 >= viewportCorners[2] ? viewportCorners[2] : 0);
 	var originY = 0 <= viewportCorners[1] ? viewportCorners[1] : (0 >= viewportCorners[3] ? viewportCorners[3] : 0);
@@ -193,11 +190,6 @@ function draw() {
 	ctx.moveTo(originX, 0);
 	ctx.lineTo(originX, canvasHeight);
 	ctx.stroke();
-
-	// draw spinning dot
-	ctx.beginPath();
-	ctx.arc(graphToCanvasX(2*Math.cos(b)), graphToCanvasY(2*Math.sin(3*b)), 3, 0, 6.28);
-	ctx.fill();
 
 	// change strokestyle for gridlines
 	ctx.lineWidth   = 1;
