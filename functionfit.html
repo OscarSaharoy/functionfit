@@ -8,6 +8,7 @@
 	<link href="functionfit.css" rel="stylesheet">
 	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
 </head>
 
 <body>
@@ -22,17 +23,18 @@
 		<div class="graph-box">
 			<h3> Place points on the graph: </h3>
 			<canvas width=600 height=350 id="canvas"> </canvas>
+			<script src="functionfit.js" type="text/javascript"> </script>
 			<script src="canvasgraph.js" type="text/javascript"> </script>
 		</div>	
 
 		<div class="button-box">
 			<h3> Select function type: </h3>
 			<ol>
-				<button> linear </button>
-				<button> exponential </button>
-				<button> power series </button>
-				<button> fourier series </button>
-				<button> bell curve </button>
+				<button class="equationButton"> linear </button>
+				<button class="equationButton"> exponential </button>
+				<button class="equationButton"> power series </button>
+				<button class="equationButton"> fourier series </button>
+				<button class="equationButton"> bell curve </button>
 			</ol>
 			<div class="options">
 				<h3> Number of terms </h3>

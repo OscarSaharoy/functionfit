@@ -30,6 +30,7 @@ var mousePosY    = 0;
 
 // data variables
 var dataPoints   = [];
+var curvePoints  = [];
 var movingPoint  = -1;
 
 // initial canvas resize & start draw loop
@@ -168,6 +169,8 @@ canvas.addEventListener("mouseup", mouseup);
 canvas.onwheel = (e) => {e.preventDefault();};
 canvas.addEventListener("wheel", wheel);
 
+window.addEventListener("keypress", (event) => (event.key=="a" ? polynomialLeastSquares(3) : 0));
+
 function draw() {
 
 	// cler canvas
@@ -217,7 +220,7 @@ function draw() {
 		// if number is offscreen shift it onscreen
 		var textHeight = rem;
 
-		// draw number
+		// draw numbers
 		ctx.fillText(x.toPrecision(2), lineAcross+4, (originY-8-textHeight < 0 ? textHeight+4 : originY-4));
 	}
 
@@ -237,6 +240,19 @@ function draw() {
 		// draw number
 		ctx.fillText(y.toPrecision(2), (originX+8+textWidth > canvasWidth ? canvasWidth-4-textWidth : originX+4), lineHeight-4);
 	}
+
+	// set style for curve
+	ctx.strokeStyle = "#30F35E";
+	ctx.lineWidth   = 2;
+
+	// draw curve
+	ctx.beginPath();
+	for(var i=0; i<curvePoints.length; ++i) {
+
+		var point = curvePoints[i];
+		i==0 ? ctx.moveTo(graphToCanvasX(point.x), graphToCanvasY(point.y)) : ctx.lineTo(graphToCanvasX(point.x), graphToCanvasY(point.y));
+	}
+	ctx.stroke();
 
 	// draw mouse position x and y in top corner
 	var text = mousePosX.toPrecision(3) + ", " + mousePosY.toPrecision(3);
