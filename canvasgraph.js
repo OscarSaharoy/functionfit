@@ -16,22 +16,22 @@ var ctx    = canvas.getContext("2d");
 // declare graph variables
 var viewportCorners = [-5, -5, 5, 5];
 var canvasWidth, canvasHeight, dpr;
-var mouseclicked = false;
-var movedInClick = false;
-var xGridSpacing = 1;
-var yGridSpacing = 1;
-var zoomLevelX   = 0;
-var zoomLevelY   = 0;
-var gridLinesX   = 16;
-var gridLinesY   = 16;
-var rem          = parseInt(getComputedStyle(document.documentElement).fontSize);
-var mousePosX    = 0;
-var mousePosY    = 0;
+var mouseclicked   = false;
+var movedInClick   = false;
+var xGridSpacing   = 1;
+var yGridSpacing   = 1;
+var zoomLevelX     = 0;
+var zoomLevelY     = 0;
+var gridLinesX     = 16;
+var gridLinesY     = 16;
+var rem            = parseInt(getComputedStyle(document.documentElement).fontSize);
+var mousePosX      = 0;
+var mousePosY      = 0;
 
 // data variables
-var dataPoints   = [];
-var curvePoints  = [];
-var movingPoint  = -1;
+var dataPoints     = [];
+var curvePoints    = [];
+var closeDataPoint = -1;
 
 // initial canvas resize & start draw loop
 resize();
@@ -89,6 +89,8 @@ function wheel(event) {
 }
 
 function mousedown(event) {
+
+	mousemove(event);
 
 	// set mouseclicked flag
 	mouseclicked = true;
@@ -169,7 +171,12 @@ canvas.addEventListener("mouseup", mouseup);
 canvas.onwheel = (e) => {e.preventDefault();};
 canvas.addEventListener("wheel", wheel);
 
-window.addEventListener("keypress", (event) => (event.key=="a" ? polynomialLeastSquares(3) : 0));
+var terms = 1;
+window.addEventListener("keypress", (event) => (event.key=="a" ? linearRegression() : 0));
+window.addEventListener("keypress", (event) => (event.key=="s" ? polynomialRegression(terms) : 0));
+window.addEventListener("keypress", (event) => (event.key=="d" ? fourierSeries(terms) : 0));
+window.addEventListener("keypress", (event) => (event.key=="z" ? terms-- : 0));
+window.addEventListener("keypress", (event) => (event.key=="x" ? terms++ : 0));
 
 function draw() {
 
