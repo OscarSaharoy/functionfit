@@ -29,9 +29,10 @@ var mousePosX      = 0;
 var mousePosY      = 0;
 
 // data variables
-var dataPoints     = [];
+var dataPoints     = []; //[new Point(0, 0), new Point(1, 1), new Point(2, 2), new Point(3, 3)];
 var curvePoints    = [];
 var closeDataPoint = -1;
+var curveFunction  = null;
 
 // initial canvas resize & start draw loop
 resize();
@@ -172,9 +173,10 @@ canvas.onwheel = (e) => {e.preventDefault();};
 canvas.addEventListener("wheel", wheel);
 
 var terms = 1;
-window.addEventListener("keypress", (event) => (event.key=="a" ? linearRegression() : 0));
-window.addEventListener("keypress", (event) => (event.key=="s" ? polynomialRegression(terms) : 0));
-window.addEventListener("keypress", (event) => (event.key=="d" ? fourierSeries(terms) : 0));
+window.addEventListener("keypress", (event) => (event.key=="a" ? curveFunction = linearRegression() : 0));
+window.addEventListener("keypress", (event) => (event.key=="s" ? curveFunction = polynomialRegression(terms) : 0));
+window.addEventListener("keypress", (event) => (event.key=="d" ? curveFunction = fourierSeries(-1, 2, terms) : 0));
+window.addEventListener("keypress", (event) => (event.key=="f" ? curveFunction = exponentialRegression() : 0));
 window.addEventListener("keypress", (event) => (event.key=="z" ? terms-- : 0));
 window.addEventListener("keypress", (event) => (event.key=="x" ? terms++ : 0));
 
@@ -252,14 +254,19 @@ function draw() {
 	ctx.strokeStyle = "#30F35E";
 	ctx.lineWidth   = 2;
 
-	// draw curve
-	ctx.beginPath();
-	for(var i=0; i<curvePoints.length; ++i) {
+	// draw curve if a curve function is set
+	if(curveFunction != null) {
 
-		var point = curvePoints[i];
-		i==0 ? ctx.moveTo(graphToCanvasX(point.x), graphToCanvasY(point.y)) : ctx.lineTo(graphToCanvasX(point.x), graphToCanvasY(point.y));
+		var step = (viewportCorners[2] - viewportCorners[0])/300;
+		ctx.beginPath();
+		ctx.moveTo(xStart, 0);
+
+		for(var x=xStart; x<viewportCorners[2]; x+=step) {
+
+			ctx.lineTo(graphToCanvasX(x), graphToCanvasY(curveFunction(x)));
+		}
+		ctx.stroke();
 	}
-	ctx.stroke();
 
 	// draw mouse position x and y in top corner
 	var text = mousePosX.toPrecision(3) + ", " + mousePosY.toPrecision(3);

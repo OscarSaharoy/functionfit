@@ -2,40 +2,6 @@
 
 // functions: linear y = mx + c, polynomial a + bx + cx^2 + ...
 
-function optimiseLinear() {
-
-	// learning rate
-	var lr = 0.01;
-
-	// iteration loop
-	for(var iterations=0; iterations<100; ++iterations) {
-
-		// loop over each point in dataPoints
-		for(var i=0; i<dataPoints.length; ++i) {
-
-			// get data point
-			point = dataPoints[i];
-
-			// derivatives of square residuals of points wrt line variables
-			var dD2dm = -2*point.x*(point.y-m*point.x-c);
-			var dD2dc = -2*(point.y-m*point.x-c);
-
-			// adjust variables
-			m -= lr*dD2dm;
-			c -= lr*dD2dc;
-		}
-	}
-
-	// draw line on graph
-	curvePoints = [];
-
-	for(var x=-10; x<11; ++x) {
-		curvePoints.push(new Point(x, m*x+c));
-	}
-
-	return (x) => (m*x + c);
-}
-
 function linearRegression() {
 
 	// find m and c to minimise square residuals of dataset
@@ -78,11 +44,11 @@ function linearRegression() {
 function polynomialRegression(order) {
 
 	// initialise variables and matrices
-	var n  = dataPoints.length;
+	var n = dataPoints.length;
 
-	var sx = math.zeros([order+1, order+1]);
-	var x  = math.zeros([order+1, n]);
-	var y  = math.zeros([n, 1]);
+	var sx = new Matrix(order+1, order+1);
+	var x  = new Matrix(order+1, n);
+	var y  = new Matrix(n, 1);
 
 	// little functions to help indexing in xs
 	indexHelper = (depth, Lrow) => (depth<order+1-Lrow ? [depth, Lrow] : [order-Lrow, depth-order+2*Lrow]);
@@ -105,14 +71,14 @@ function polynomialRegression(order) {
 			// set value in x and y
 			if(i<order+1) {
 
-				x[i][p] = xiToPower;
-				y[p][0] = dataPoints[p].y
+				x.set(i, p, xiToPower);
+				y.set(p, 0, dataPoints[p].y);
 			}
 		}
 
 		// set value in sx based on powersum
 		var [m, n] = indexHelper(i, 0);
-		sx[m][n] = powerSum;
+		sx.set(m, n, powerSum);
 	}
 
 	// fill the rest of sx based on Lrow-depth indexing
@@ -121,19 +87,15 @@ function polynomialRegression(order) {
 
 			var [m, n] = indexHelper(depth, Lrow);
 			var [r, s] = indexHelper(depth+1, Lrow-1);
-			sx[m][n] = sx[r][s];
+			sx.set(m, n, sx.get(r, s));
 		}
 	}
 
-	// create matrices from arrays
-	sx = math.matrix(sx);
-	x  = math.matrix(x);
-	y  = math.matrix(y);
-
 	// calculate polynomial coefficients
-	var c = math.flatten(math.multiply(math.inv(sx), math.multiply(x, y)))._data;
+	var c = (matMul(sx.inv(), matMul(x, y))).data;
 	// alternative
-	//var c = math.multiply(math.multiply(math.inv(math.multiply(x, math.transpose(x))), x), y);
+	//var c = matMul(matMul( (matMul( x, x.T() )).inv() , x), y).data;
+
 
 	// draw curve on graph
 	curvePoints = [];
@@ -147,7 +109,7 @@ function polynomialRegression(order) {
 			y += Math.pow(x, p) * c[p];
 		}
 
-		curvePoints.push(new Point(x, y))
+		curvePoints.push(new Point(x, y));
 	}
 
 	// return polynomial function
@@ -155,37 +117,76 @@ function polynomialRegression(order) {
 	return poly;
 }
 
-function fourierSeries(maxFreq) {
+function fourierSeries(startX, period, maxFreq) {
 
+	// get sorted list of points within the target period
+	var fourierPoints = dataPoints.filter( (point) => (point.x >= startX && point.x <= startX+period) );
+	fourierPoints.sort( (a,b) => (a.x < b.x ? -1 : 1) );
+
+	// add extra point onto the end of the sequence to make function loop smoothly
+	fourierPoints.push(new Point(fourierPoints[0].x+period, fourierPoints[0].y));
+
+	// array of fourier coefficients
 	var c = new Array(maxFreq*2+1);
 
+	// loop over frequency components
 	for(var freq=-maxFreq; freq<=maxFreq; ++freq) {
 
-		var integral = 0;
+		// calulate fourier coefficient as value of integral
+		var integral = new Complex(0, 0);
 
-		for(var i=0; i<dataPoints.length-1; ++i) {
+		for(var i=0; i<fourierPoints.length-1; ++i) {
 
-			var x_a = dataPoints[i].x;
-			var y_a = dataPoints[i].y;
-			var x_b = dataPoints[i+1].x;
-			var y_b = dataPoints[i+1].y;
+			// setup some variables
+			var x_a = fourierPoints[i].x;
+			var y_a = fourierPoints[i].y;
+			var x_b = fourierPoints[i+1].x;
+			var y_b = fourierPoints[i+1].y;
 
+			// line is the interpolation function between the 2 points
 			var grad = (y_b-y_a)/(x_b-x_a);
 			const line = (x) => (grad*(x-x_a) + y_a);
 
 			var u = 0;
 
+			// increment value of integral
 			if(freq != 0) {
-				u = math.add(math.subtract(math.multiply(math.complex(0, line(x_b) / (2*freq*Math.PI)), math.exp(math.complex(0, -2*Math.PI*freq*x_b))), math.multiply(math.complex(0, line(x_a) / (2*freq*Math.PI)), math.exp(math.complex(0, -2*Math.PI*freq*x_a))) ), math.multiply(grad/(4*Math.PI*Math.PI*freq*freq), math.subtract(math.exp(math.complex(0, -2*Math.PI*freq*x_b)), math.exp(math.complex(0, -2*Math.PI*freq*x_a)))));
+
+				var freq2pi = 2*freq*Math.PI/period;
+
+				u = comAdd(
+						comSub(
+							comMul(
+								new Complex(0, y_b / freq2pi),
+								comExp(-freq2pi*x_b)
+							), 
+							comMul(
+								new Complex(0, y_a / freq2pi),
+								comExp(-freq2pi*x_a)
+							)
+						),
+						comScale(
+							comSub(
+								comExp(-freq2pi*x_b), 
+								comExp(-freq2pi*x_a)
+							),
+							grad/(freq2pi*freq2pi)
+						)
+					);
 			}
 			else {
-				u = grad/2 * (x_b*x_b - x_a*x_a) + (y_a - grad*x_a) * (x_b - x_a);
+				u = new Complex(grad/2 * (x_b*x_b - x_a*x_a) + (y_a - grad*x_a) * (x_b - x_a), 0);
 			}
-			integral = math.add(integral, u);
+
+			// increment integral
+			integral = comAdd(integral, u);
 		}
 
+		// set value in c
 		c[freq+maxFreq] = integral;
 	}
+
+	// draw curve
 
 	curvePoints = [];
 
@@ -195,9 +196,58 @@ function fourierSeries(maxFreq) {
 
 		for(var freq=-maxFreq; freq<=maxFreq; ++freq) {
 
-			y += math.multiply(c[freq+maxFreq], math.exp(math.complex(0, 2*Math.PI*freq*x))).re;
+			y += comMul(c[freq+maxFreq], comExp(2*Math.PI*freq*x/period)).re;
 		}
 
-		curvePoints.push(new Point(x, y));
+		curvePoints.push(new Point(x, y/period));
 	}
+
+	// return fourier function
+	const fourierFunction = (x) => (c.reduce( (acc, cur, idx) => ( acc + comMul(cur, comExp(2*Math.PI*(idx-maxFreq)*x/period)).re ), 0 )/period );
+	return fourierFunction;
+}
+
+function exponentialRegression() {
+
+	// get points above 0
+	var exponentialPoints = dataPoints.filter( (point) => (point.y >= 0) );
+
+	// function is y=ab^x
+	var a = 1;
+	var b = 1;
+
+	// find a and b to minimise square residuals of dataset
+	var sx    = 0;
+	var sx2   = 0;
+	var slny  = 0;
+	var sxlny = 0;
+	var n     = exponentialPoints.length;
+
+	// loop over each point in dataPoints
+	for(var i=0; i<n; ++i) {
+
+		// get data point
+		point = exponentialPoints[i];
+
+		// increment sums
+		sx    += point.x;
+		sx2   += point.x*point.x;
+		slny  += Math.log(point.y);
+		sxlny += point.x*Math.log(point.y);
+	}
+
+	// calculate a and b
+	b = Math.exp( (slny - n*sxlny/sx) / (sx - n*sx2/sx) );
+	a = Math.exp( slny/n - Math.log(b)*sx/n );
+
+	// draw line on graph
+	curvePoints = [];
+
+	for(var x=-2; x<3; x+=0.1) {
+		curvePoints.push( new Point(x, a*Math.pow(b, x)) );
+	}
+
+	// return exponential function
+	const exponentialFunction = (x) => ( a*Math.pow(b, x) );
+	return exponentialFunction;
 }
