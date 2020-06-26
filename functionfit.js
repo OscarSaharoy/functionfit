@@ -172,7 +172,7 @@ function fourierSeries(startX, period, maxFreq) {
 function exponentialRegression() {
 
 	// get points above 0
-	var exponentialPoints = dataPoints.filter( (point) => (point.y >= 0) );
+	var exponentialPoints = dataPoints.filter( (point) => (point.y > 0) );
 
 	// function is y=ab^x
 	var a = 1;
@@ -211,18 +211,19 @@ function exponentialRegression() {
 
 	// return exponential function & point function
 	const exponentialFunction = (x) => ( a*Math.pow(b, x) );
-	const pointFunction = (point) => (point.y >= 0);
+	const pointFunction = (point) => (point.y > 0);
 	return [exponentialFunction, pointFunction];
 }
 
-var nbeta = 5;
-var beta  = new Array(nbeta).fill(1);
 
+// function iteration variables
+var beta  = new Array(10).fill(1);
 const freakedExponential = (x, coeffs) => (coeffs[0]*Math.pow(coeffs[1], Math.pow(x, coeffs[2])) + coeffs[3]);
 const sigmoid = (x, coeffs) => ( coeffs[0] / (coeffs[1] + coeffs[2] * Math.pow(coeffs[3], x)) + coeffs[4] );
 
 function functionIteration(nbeta = 5, func = sigmoid) {
 
+	// check for nans in parameters
 	for(var i=0; i<nbeta; ++i) {
 
 		beta[i] = isNaN(beta[i]) ? 1 : beta[i];
@@ -230,8 +231,10 @@ function functionIteration(nbeta = 5, func = sigmoid) {
 
 	for(var iteration=0; iteration<1000; ++iteration) {
 
+		// array containing sum of partial derivatives of error with respect to each parameter
 		var dbeta = new Array(nbeta).fill(0);
 
+		// loop over datapoints and find partial derivative of error from that point with respect to each parameter
 		for(var i=0; i<dataPoints.length; ++i) {
 
 			var xi = dataPoints[i].x;
@@ -239,15 +242,19 @@ function functionIteration(nbeta = 5, func = sigmoid) {
 
 			for(var j=0; j<nbeta; ++j) {
 
+				// create parameter lists with 1 element perturbed for 2 sided gradient approximation
+				// todo symbolic differentiation
 				var betaplus  = beta.slice();
 				var betaminus = beta.slice();
 				betaplus[j]  += 1e-4;
 				betaminus[j] -= 1e-4;
 
+				// increment partial derivative
 				dbeta[j] += (Math.pow(yi - func(xi, betaplus), 2) - Math.pow(yi - func(xi, betaminus), 2)) / 2e-4;
 			}
 		}
 
+		// change the parameters proportional to their derivative
 		for(var j=0; j<nbeta; ++j) {
 
 			beta[j] -= 0.0001*dbeta[j];

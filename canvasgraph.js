@@ -178,6 +178,7 @@ window.addEventListener("keypress", (event) => (event.key=="s" ? [curveFunction,
 window.addEventListener("keypress", (event) => (event.key=="d" ? [curveFunction, pointFunction] = fourierSeries(-1, 2, terms) : 0));
 window.addEventListener("keypress", (event) => (event.key=="f" ? [curveFunction, pointFunction] = exponentialRegression() : 0));
 window.addEventListener("keypress", (event) => (event.key=="g" ? [curveFunction, pointFunction] = functionIteration() : 0));
+window.addEventListener("keypress", (event) => (event.key=="h" ? beta.fill(1) : 0));
 window.addEventListener("keypress", (event) => (event.key=="z" ? terms-- : 0));
 window.addEventListener("keypress", (event) => (event.key=="x" ? terms++ : 0));
 
