@@ -29,16 +29,9 @@ function linearRegression() {
 	m = (sxy/sx - sy/n) / (sx2/sx - sx/n);
 	c = sxy/sx - m*sx2/sx;
 
-	// draw line on graph
-	curvePoints = [];
-
-	for(var x=-10; x<11; ++x) {
-		curvePoints.push(new Point(x, m*x+c));
-	}
-
 	// return linear function
-	const line = (x) => (m*x + c);
-	return line;
+	const lineFunction = (x) => (m*x + c);
+	return [lineFunction, (point) => (true)];
 }
 
 function polynomialRegression(order) {
@@ -96,25 +89,9 @@ function polynomialRegression(order) {
 	// alternative
 	//var c = matMul(matMul( (matMul( x, x.T() )).inv() , x), y).data;
 
-
-	// draw curve on graph
-	curvePoints = [];
-
-	for(var x=-10; x<11; x+=0.1) {
-
-		var y=0;
-
-		for(var p=0; p<order+1; ++p) {
-			
-			y += Math.pow(x, p) * c[p];
-		}
-
-		curvePoints.push(new Point(x, y));
-	}
-
 	// return polynomial function
-	const poly = (x) => (c.reduce( (acc, cur, idx) => (acc + cur*Math.pow(x, idx))) );
-	return poly;
+	const polynomialFunction = (x) => (c.reduce( (acc, cur, idx) => (acc + cur*Math.pow(x, idx))) );
+	return [polynomialFunction, (point) => (true)];
 }
 
 function fourierSeries(startX, period, maxFreq) {
@@ -186,25 +163,10 @@ function fourierSeries(startX, period, maxFreq) {
 		c[freq+maxFreq] = integral;
 	}
 
-	// draw curve
-
-	curvePoints = [];
-
-	for(var x=-1; x<=2; x+=0.01) {
-
-		var y = 0;
-
-		for(var freq=-maxFreq; freq<=maxFreq; ++freq) {
-
-			y += comMul(c[freq+maxFreq], comExp(2*Math.PI*freq*x/period)).re;
-		}
-
-		curvePoints.push(new Point(x, y/period));
-	}
-
-	// return fourier function
+	// return fourier function & point funtion
 	const fourierFunction = (x) => (c.reduce( (acc, cur, idx) => ( acc + comMul(cur, comExp(2*Math.PI*(idx-maxFreq)*x/period)).re ), 0 )/period );
-	return fourierFunction;
+	const pointFunction = (point) => (point.x >= startX && point.x <= startX+period);
+	return [fourierFunction, pointFunction];
 }
 
 function exponentialRegression() {
@@ -247,7 +209,51 @@ function exponentialRegression() {
 		curvePoints.push( new Point(x, a*Math.pow(b, x)) );
 	}
 
-	// return exponential function
+	// return exponential function & point function
 	const exponentialFunction = (x) => ( a*Math.pow(b, x) );
-	return exponentialFunction;
+	const pointFunction = (point) => (point.y >= 0);
+	return [exponentialFunction, pointFunction];
+}
+
+var nbeta = 5;
+var beta  = new Array(nbeta).fill(1);
+
+const freakedExponential = (x, coeffs) => (coeffs[0]*Math.pow(coeffs[1], Math.pow(x, coeffs[2])) + coeffs[3]);
+const sigmoid = (x, coeffs) => ( coeffs[0] / (coeffs[1] + coeffs[2] * Math.pow(coeffs[3], x)) + coeffs[4] );
+
+function functionIteration(nbeta = 5, func = sigmoid) {
+
+	for(var i=0; i<nbeta; ++i) {
+
+		beta[i] = isNaN(beta[i]) ? 1 : beta[i];
+	}
+
+	for(var iteration=0; iteration<1000; ++iteration) {
+
+		var dbeta = new Array(nbeta).fill(0);
+
+		for(var i=0; i<dataPoints.length; ++i) {
+
+			var xi = dataPoints[i].x;
+			var yi = dataPoints[i].y;
+
+			for(var j=0; j<nbeta; ++j) {
+
+				var betaplus  = beta.slice();
+				var betaminus = beta.slice();
+				betaplus[j]  += 1e-4;
+				betaminus[j] -= 1e-4;
+
+				dbeta[j] += (Math.pow(yi - func(xi, betaplus), 2) - Math.pow(yi - func(xi, betaminus), 2)) / 2e-4;
+			}
+		}
+
+		for(var j=0; j<nbeta; ++j) {
+
+			beta[j] -= 0.0001*dbeta[j];
+		}
+	}
+
+	const iteratedFunction = (x) => (func(x, beta));
+	return [iteratedFunction, (point) => (true)];
 }

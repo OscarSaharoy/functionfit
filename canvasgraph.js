@@ -30,9 +30,9 @@ var mousePosY      = 0;
 
 // data variables
 var dataPoints     = []; //[new Point(0, 0), new Point(1, 1), new Point(2, 2), new Point(3, 3)];
-var curvePoints    = [];
 var closeDataPoint = -1;
 var curveFunction  = null;
+var pointFunction  = (point) => (true);
 
 // initial canvas resize & start draw loop
 resize();
@@ -173,10 +173,11 @@ canvas.onwheel = (e) => {e.preventDefault();};
 canvas.addEventListener("wheel", wheel);
 
 var terms = 1;
-window.addEventListener("keypress", (event) => (event.key=="a" ? curveFunction = linearRegression() : 0));
-window.addEventListener("keypress", (event) => (event.key=="s" ? curveFunction = polynomialRegression(terms) : 0));
-window.addEventListener("keypress", (event) => (event.key=="d" ? curveFunction = fourierSeries(-1, 2, terms) : 0));
-window.addEventListener("keypress", (event) => (event.key=="f" ? curveFunction = exponentialRegression() : 0));
+window.addEventListener("keypress", (event) => (event.key=="a" ? [curveFunction, pointFunction] = linearRegression() : 0));
+window.addEventListener("keypress", (event) => (event.key=="s" ? [curveFunction, pointFunction] = polynomialRegression(terms) : 0));
+window.addEventListener("keypress", (event) => (event.key=="d" ? [curveFunction, pointFunction] = fourierSeries(-1, 2, terms) : 0));
+window.addEventListener("keypress", (event) => (event.key=="f" ? [curveFunction, pointFunction] = exponentialRegression() : 0));
+window.addEventListener("keypress", (event) => (event.key=="g" ? [curveFunction, pointFunction] = functionIteration() : 0));
 window.addEventListener("keypress", (event) => (event.key=="z" ? terms-- : 0));
 window.addEventListener("keypress", (event) => (event.key=="x" ? terms++ : 0));
 
@@ -263,7 +264,11 @@ function draw() {
 
 		for(var x=xStart; x<viewportCorners[2]; x+=step) {
 
-			ctx.lineTo(graphToCanvasX(x), graphToCanvasY(curveFunction(x)));
+			// limit y coord so that stroke works properly
+			var canvasY = graphToCanvasY(curveFunction(x));
+			canvasY = canvasY>canvasHeight+10 ? canvasHeight+10 : canvasY<-10 ? -10 : canvasY;
+
+			ctx.lineTo(graphToCanvasX(x), canvasY);
 		}
 		ctx.stroke();
 	}
@@ -281,12 +286,14 @@ function draw() {
 	ctx.fillText(text, canvasWidth-4-textWidth, rem+4);
 
 	// set style for data points
-	ctx.strokeStyle = "#30F35E";
 	ctx.fillStyle   = "white";
 	ctx.lineWidth   = 3;
 
 	// draw data points
 	for(var point of dataPoints) {
+
+		// use pointFunction to determine point colour
+		ctx.strokeStyle = pointFunction(point) ? "#30F35E" : "#bbbbbb";
 
 		// draw circle on each point
 		ctx.beginPath();
