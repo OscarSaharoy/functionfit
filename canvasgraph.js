@@ -10,7 +10,7 @@ class Point {
 }
 
 // get canvas and drawing context
-var canvas = document.getElementById("canvas");
+var canvas = document.getElementById("canvasgraph");
 var ctx    = canvas.getContext("2d");
 
 // declare graph variables
@@ -29,10 +29,13 @@ var mousePosX      = 0;
 var mousePosY      = 0;
 
 // data variables
-var dataPoints     = []; //[new Point(0, 0), new Point(1, 1), new Point(2, 2), new Point(3, 3)];
+var dataPoints     = [new Point(-0.3, 0.2), new Point(-0.1, -1), new Point(0.1, -2), new Point(0.3, 0.2)];//[];
 var closeDataPoint = -1;
+
+// initial function values
 var curveFunction  = null;
 var pointFunction  = (point) => (true);
+var regressionFunction = () => ([null, (point) => (true)]);
 
 // initial canvas resize & start draw loop
 resize();
@@ -128,6 +131,9 @@ function mousemove(event) {
 		// move close data point to under cursor
 		dataPoints[closeDataPoint].x = mousePosX;
 		dataPoints[closeDataPoint].y = mousePosY;
+
+		// update regression model
+		regressionFunction();
 	}
 
 	else {
@@ -152,6 +158,9 @@ function mouseup(event) {
 		else {
 			dataPoints.push(new Point(mousePosX, mousePosY));
 		}
+
+		// update regression model
+		regressionFunction();
 	}
 
 	// set mouse flags
@@ -171,16 +180,6 @@ canvas.addEventListener("mouseup", mouseup);
 // prevents page scrolling when mouse in canvas
 canvas.onwheel = (e) => {e.preventDefault();};
 canvas.addEventListener("wheel", wheel);
-
-var terms = 1;
-window.addEventListener("keypress", (event) => (event.key=="a" ? [curveFunction, pointFunction] = linearRegression() : 0));
-window.addEventListener("keypress", (event) => (event.key=="s" ? [curveFunction, pointFunction] = polynomialRegression(terms) : 0));
-window.addEventListener("keypress", (event) => (event.key=="d" ? [curveFunction, pointFunction] = fourierSeries(-1, 2, terms) : 0));
-window.addEventListener("keypress", (event) => (event.key=="f" ? [curveFunction, pointFunction] = exponentialRegression() : 0));
-window.addEventListener("keypress", (event) => (event.key=="g" ? [curveFunction, pointFunction] = functionIteration() : 0));
-window.addEventListener("keypress", (event) => (event.key=="h" ? beta.fill(1) : 0));
-window.addEventListener("keypress", (event) => (event.key=="z" ? terms-- : 0));
-window.addEventListener("keypress", (event) => (event.key=="x" ? terms++ : 0));
 
 function draw() {
 
@@ -275,20 +274,21 @@ function draw() {
 	}
 
 	// draw mouse position x and y in top corner
+	ctx.font = "1.3rem Comfortaa";
 	var text = mousePosX.toPrecision(3) + ", " + mousePosY.toPrecision(3);
 	var textWidth = ctx.measureText(text).width;
 
 	// draw white box behind
 	ctx.fillStyle = "white";
-	ctx.fillRect(canvasWidth-8-textWidth, 0, 8+textWidth, rem+8);
+	ctx.fillRect(canvasWidth-8-textWidth, 0, 8+textWidth, rem*1.3+8);
 
 	// draw numbers
 	ctx.fillStyle = "black";
-	ctx.fillText(text, canvasWidth-4-textWidth, rem+4);
+	ctx.fillText(text, canvasWidth-4-textWidth, rem*1.3+4);
 
 	// set style for data points
-	ctx.fillStyle   = "white";
-	ctx.lineWidth   = 3;
+	ctx.fillStyle = "white";
+	ctx.lineWidth = 3;
 
 	// draw data points
 	for(var point of dataPoints) {

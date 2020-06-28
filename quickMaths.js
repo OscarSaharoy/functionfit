@@ -45,6 +45,7 @@ function comScale(z1, s) {
 	return new Complex(z1.re*s, z1.im*s);
 }
 
+
 class Matrix {
 	constructor(rows, cols) {
 

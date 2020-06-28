@@ -29,9 +29,19 @@ function linearRegression() {
 	m = (sxy/sx - sy/n) / (sx2/sx - sx/n);
 	c = sxy/sx - m*sx2/sx;
 
-	// return linear function
+	// set curve function and point function
 	const lineFunction = (x) => (m*x + c);
-	return [lineFunction, (point) => (true)];
+	curveFunction = lineFunction;
+	pointFunction = (point) => (true);
+
+	// set equation display and code boxes
+	mathText = "y = "+m.toFixed(3)+"x + "+c.toFixed(3);
+
+	codeboxes[0].value = m.toFixed(3)+"*x + "+c.toFixed(3);
+	codeboxes[1].value = m.toFixed(3)+"*x + "+c.toFixed(3);
+	codeboxes[2].value = m.toFixed(3)+"*x + "+c.toFixed(3);
+	codeboxes[3].value = m.toFixed(3)+"*x + "+c.toFixed(3);
+	codeboxes[4].value = m.toFixed(3)+"*x + "+c.toFixed(3);
 }
 
 function polynomialRegression(order) {
@@ -89,12 +99,33 @@ function polynomialRegression(order) {
 	// alternative
 	//var c = matMul(matMul( (matMul( x, x.T() )).inv() , x), y).data;
 
-	// return polynomial function
+	// set curve function and point function
 	const polynomialFunction = (x) => (c.reduce( (acc, cur, idx) => (acc + cur*Math.pow(x, idx))) );
-	return [polynomialFunction, (point) => (true)];
+	curveFunction = polynomialFunction;
+	pointFunction = (point) => (true);
+
+	// set equation display and code boxes
+	//⁰ ¹ ² ³ ⁴ ⁵ ⁶ ⁷ ⁸ ⁹
+	var powers = ["", "x", "x²", "x³", "x⁴", "x⁵", "x⁶", "x⁷", "x⁸", "x⁹"];
+	mathText = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "y = " : " + ") + cur.toFixed(3)+powers[idx] ), "" ).replace("+ -", "- ");
+
+	// arrays to help format code
+	var powersccpp = ["", "*x", "*x*x", "*pow(x,3)", "*pow(x,4)", "*pow(x,5)", "*pow(x,6)", "*pow(x,7)", "*pow(x,8)", "*pow(x,9)"];
+	var powerscsh  = ["", "*x", "*x*x", "*Math.Pow(x,3)", "*Math.Pow(x,4)", "*Math.Pow(x,5)", "*Math.Pow(x,6)", "*Math.Pow(x,7)", "*Math.Pow(x,8)", "*Math.Pow(x,9)"];
+	var powersjs   = ["", "*x", "*x*x", "*Math.pow(x,3)", "*Math.pow(x,4)", "*Math.pow(x,5)", "*Math.pow(x,6)", "*Math.pow(x,7)", "*Math.pow(x,8)", "*Math.pow(x,9)"];
+	var powerspy   = ["", "*x", "*x*x", "*x**3", "*x**4", "*x**5", "*x**6", "*x**7", "*x**8", "*x**9"];
+
+	codeboxes[0].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powersccpp[idx] ), "" ).replace("+ -", "- ");
+	codeboxes[1].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powerscsh[idx] ), "" ).replace("+ -", "- ");
+	codeboxes[2].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powersjs[idx] ), "" ).replace("+ -", "- ");
+	codeboxes[3].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powerspy[idx] ), "" ).replace("+ -", "- ");
+	codeboxes[4].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powersccpp[idx] ), "" ).replace("+ -", "- ");
 }
 
-function fourierSeries(startX, period, maxFreq) {
+function fourierSeries(startX, endX, maxFreq) {
+
+	// period is the length of 1 complete cycle
+	var period = endX - startX;
 
 	// get sorted list of points within the target period
 	var fourierPoints = dataPoints.filter( (point) => (point.x >= startX && point.x <= startX+period) );
@@ -163,10 +194,10 @@ function fourierSeries(startX, period, maxFreq) {
 		c[freq+maxFreq] = integral;
 	}
 
-	// return fourier function & point funtion
+	// set curve function & point funtion
 	const fourierFunction = (x) => (c.reduce( (acc, cur, idx) => ( acc + comMul(cur, comExp(2*Math.PI*(idx-maxFreq)*x/period)).re ), 0 )/period );
-	const pointFunction = (point) => (point.x >= startX && point.x <= startX+period);
-	return [fourierFunction, pointFunction];
+	curveFunction = fourierFunction;
+	pointFunction = (point) => (point.x >= startX && point.x <= startX+period);
 }
 
 function exponentialRegression() {
@@ -202,17 +233,19 @@ function exponentialRegression() {
 	b = Math.exp( (slny - n*sxlny/sx) / (sx - n*sx2/sx) );
 	a = Math.exp( slny/n - Math.log(b)*sx/n );
 
-	// draw line on graph
-	curvePoints = [];
-
-	for(var x=-2; x<3; x+=0.1) {
-		curvePoints.push( new Point(x, a*Math.pow(b, x)) );
-	}
-
-	// return exponential function & point function
+	// set curve function & point function
 	const exponentialFunction = (x) => ( a*Math.pow(b, x) );
-	const pointFunction = (point) => (point.y > 0);
-	return [exponentialFunction, pointFunction];
+	curveFunction = exponentialFunction;
+	pointFunction = (point) => (point.y > 0);
+
+	// set equation display and code boxes
+	mathText = "y = "+a.toFixed(3)+" × "+b.toFixed(3)+"^x";
+
+	codeboxes[0].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", x)";
+	codeboxes[1].value = a.toFixed(3)+" * Math.Pow("+b.toFixed(3)+", x)";
+	codeboxes[2].value = a.toFixed(3)+" * Math.pow("+b.toFixed(3)+", x)";
+	codeboxes[3].value = a.toFixed(3)+" * "+b.toFixed(3)+"**x";
+	codeboxes[4].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", x)";
 }
 
 
@@ -221,7 +254,7 @@ var beta  = new Array(10).fill(1);
 const freakedExponential = (x, coeffs) => (coeffs[0]*Math.pow(coeffs[1], Math.pow(x, coeffs[2])) + coeffs[3]);
 const sigmoid = (x, coeffs) => ( coeffs[0] / (coeffs[1] + coeffs[2] * Math.pow(coeffs[3], x)) + coeffs[4] );
 
-function functionIteration(nbeta = 5, func = sigmoid) {
+function functionIteration(nbeta = 4, func = freakedExponential) {
 
 	// check for nans in parameters
 	for(var i=0; i<nbeta; ++i) {
@@ -257,7 +290,7 @@ function functionIteration(nbeta = 5, func = sigmoid) {
 		// change the parameters proportional to their derivative
 		for(var j=0; j<nbeta; ++j) {
 
-			beta[j] -= 0.0001*dbeta[j];
+			beta[j] -= 0.001*dbeta[j];
 		}
 	}
 
