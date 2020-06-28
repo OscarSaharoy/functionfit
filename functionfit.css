@@ -116,6 +116,10 @@ ol button:active {
 	border: 3px solid #44EBF8;	
 }
 
+.function-box {
+	display: none;
+}
+
 #mathcanvas {
 	justify-self: center;
 	width: 100%;

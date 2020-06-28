@@ -29,7 +29,7 @@ var mousePosX      = 0;
 var mousePosY      = 0;
 
 // data variables
-var dataPoints     = [new Point(-0.3, 0.2), new Point(-0.1, -1), new Point(0.1, -2), new Point(0.3, 0.2)];//[];
+var dataPoints     = [new Point(-2.0, -0.5), new Point(-0.8, 0.2), new Point(0, -0.3), new Point(0.6, 0.5), new Point(2.0, 1.5)];//[];
 var closeDataPoint = -1;
 
 // initial function values
@@ -260,7 +260,7 @@ function draw() {
 
 		var step = (viewportCorners[2] - viewportCorners[0])/300;
 		ctx.beginPath();
-		ctx.moveTo(xStart, 0);
+		//ctx.moveTo(xStart, 0);
 
 		for(var x=xStart; x<viewportCorners[2]; x+=step) {
 

@@ -1,8 +1,8 @@
 // Oscar Saharoy 2020
 
-// functions: linear y = mx + c, polynomial a + bx + cx^2 + ...
-
 function linearRegression() {
+
+	// y = mx+c
 
 	// find m and c to minimise square residuals of dataset
 	var m   = 0;
@@ -37,67 +37,40 @@ function linearRegression() {
 	// set equation display and code boxes
 	mathText = "y = "+m.toFixed(3)+"x + "+c.toFixed(3);
 
-	codeboxes[0].value = m.toFixed(3)+"*x + "+c.toFixed(3);
-	codeboxes[1].value = m.toFixed(3)+"*x + "+c.toFixed(3);
-	codeboxes[2].value = m.toFixed(3)+"*x + "+c.toFixed(3);
-	codeboxes[3].value = m.toFixed(3)+"*x + "+c.toFixed(3);
-	codeboxes[4].value = m.toFixed(3)+"*x + "+c.toFixed(3);
+	codeboxes[0].value = (m.toFixed(3)+"*x + "+c.toFixed(3)).replace("+ -", "- ");
+	codeboxes[1].value = (m.toFixed(3)+"*x + "+c.toFixed(3)).replace("+ -", "- ");
+	codeboxes[2].value = (m.toFixed(3)+"*x + "+c.toFixed(3)).replace("+ -", "- ");
+	codeboxes[3].value = (m.toFixed(3)+"*x + "+c.toFixed(3)).replace("+ -", "- ");
+	codeboxes[4].value = (m.toFixed(3)+"*x + "+c.toFixed(3)).replace("+ -", "- ");
 }
 
 function polynomialRegression(order) {
 
+	// y = c[0] + c[1]x + c[2]x^2 + c[3]x^3 ...
+
 	// initialise variables and matrices
 	var n = dataPoints.length;
 
-	var sx = new Matrix(order+1, order+1);
 	var x  = new Matrix(order+1, n);
 	var y  = new Matrix(n, 1);
 
-	// little functions to help indexing in xs
-	indexHelper = (depth, Lrow) => (depth<order+1-Lrow ? [depth, Lrow] : [order-Lrow, depth-order+2*Lrow]);
-	LrowDepth   = (Lrow) => (2*(order-Lrow)+1);
-
 	// populate matrices
 
-	// loop over first Lrow in sx to fill it
-	for(var i=0; i<LrowDepth(0); ++i) {
+	// loop over first row in x to fill it
+	for(var i=0; i<order+1; ++i) {
 
-		// sum of datapoint.x raised to powers
-		var powerSum = 0;
-
-		// loop over dataPoints to get powersum and set each value in x
+		// loop over dataPoints to set each value in x and y
 		for(var p=0; p<dataPoints.length; ++p) {
 
 			var xiToPower = Math.pow(dataPoints[p].x, i);
-			powerSum += xiToPower;
 
-			// set value in x and y
-			if(i<order+1) {
-
-				x.set(i, p, xiToPower);
-				y.set(p, 0, dataPoints[p].y);
-			}
-		}
-
-		// set value in sx based on powersum
-		var [m, n] = indexHelper(i, 0);
-		sx.set(m, n, powerSum);
-	}
-
-	// fill the rest of sx based on Lrow-depth indexing
-	for(var Lrow=1; Lrow<order+1; ++Lrow) {
-		for(var depth=0; depth<LrowDepth(Lrow); ++depth) {
-
-			var [m, n] = indexHelper(depth, Lrow);
-			var [r, s] = indexHelper(depth+1, Lrow-1);
-			sx.set(m, n, sx.get(r, s));
+			x.set(i, p, xiToPower);
+			y.set(p, 0, dataPoints[p].y);
 		}
 	}
 
 	// calculate polynomial coefficients
-	var c = (matMul(sx.inv(), matMul(x, y))).data;
-	// alternative
-	//var c = matMul(matMul( (matMul( x, x.T() )).inv() , x), y).data;
+	var c = matMul(matMul( (matMul( x, x.T() )).inv() , x), y).data;
 
 	// set curve function and point function
 	const polynomialFunction = (x) => (c.reduce( (acc, cur, idx) => (acc + cur*Math.pow(x, idx))) );
@@ -115,16 +88,114 @@ function polynomialRegression(order) {
 	var powersjs   = ["", "*x", "*x*x", "*Math.pow(x,3)", "*Math.pow(x,4)", "*Math.pow(x,5)", "*Math.pow(x,6)", "*Math.pow(x,7)", "*Math.pow(x,8)", "*Math.pow(x,9)"];
 	var powerspy   = ["", "*x", "*x*x", "*x**3", "*x**4", "*x**5", "*x**6", "*x**7", "*x**8", "*x**9"];
 
-	codeboxes[0].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powersccpp[idx] ), "" ).replace("+ -", "- ");
-	codeboxes[1].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powerscsh[idx] ), "" ).replace("+ -", "- ");
-	codeboxes[2].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powersjs[idx] ), "" ).replace("+ -", "- ");
-	codeboxes[3].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powerspy[idx] ), "" ).replace("+ -", "- ");
-	codeboxes[4].value = c.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powersccpp[idx] ), "" ).replace("+ -", "- ");
+	// code output function
+	outputCode = (c_arr, powerslang) => (c_arr.reduce( (acc, cur, idx) => (acc + (acc=="" ? "" : " + ") + cur.toFixed(3)+powerslang[idx] ), "" ).replace("+ -", "- "));
+
+	codeboxes[0].value = outputCode(c, powersccpp).replace("+ -", "- ");
+	codeboxes[1].value = outputCode(c, powerscsh).replace("+ -", "- ");
+	codeboxes[2].value = outputCode(c, powersjs).replace("+ -", "- ");
+	codeboxes[3].value = outputCode(c, powerspy).replace("+ -", "- ");
+	codeboxes[4].value = outputCode(c, powersccpp).replace("+ -", "- ");
+}
+
+function powerlawRegression() {
+
+	// y = px^q
+
+	// filter datapoints - only x>0 and y>0 allowed
+	var powerlawPoints = dataPoints.filter((point) => (point.x > 0 && point.y > 0));
+
+	// find p and q to minimise square residuals of dataset
+	var slnx    = 0;
+	var slnx2   = 0;
+	var slny    = 0;
+	var slnxlny = 0;
+	var n       = powerlawPoints.length;
+
+	// loop over each point in powerlawPoints
+	for(var i=0; i<powerlawPoints.length; ++i) {
+
+		// get data point
+		point = powerlawPoints[i];
+
+		// increment sums
+		slnx    += Math.log(point.x);
+		slnx2   += Math.log(point.x)*Math.log(point.x);
+		slny    += Math.log(point.y);
+		slnxlny += Math.log(point.x)*Math.log(point.y);
+	}
+
+	var q = (slnxlny/slnx - slny/n) / (slnx2/slnx - slnx/n);
+	var p = Math.exp(slnxlny/slnx - q*slnx2/slnx);
+
+	// set curve function and point function
+	const powerlawFunction = (x) => (p*Math.pow(x, q));
+	curveFunction = powerlawFunction;
+	pointFunction = (point) => (point.x > 0 && point.y > 0);
+
+	// set equation display and code boxes
+	//mathText = "y = "+m.toFixed(3)+"x + "+c.toFixed(3);
+
+	codeboxes[0].value = p.toFixed(3)+"*pow(x, "+q.toFixed(3)+")";
+	codeboxes[1].value = p.toFixed(3)+"*Math.Pow(x, "+q.toFixed(3)+")";
+	codeboxes[2].value = p.toFixed(3)+"*Math.pow(x, "+q.toFixed(3)+")";
+	codeboxes[3].value = p.toFixed(3)+"*math.pow(x, "+q.toFixed(3)+")";
+	codeboxes[4].value = p.toFixed(3)+"*pow(x, "+q.toFixed(3)+")";
+}
+
+function exponentialRegression() {
+
+	// y = ab^x
+
+	// get points above 0
+	var exponentialPoints = dataPoints.filter( (point) => (point.y > 0) );
+
+	// function is y=ab^x
+	var a = 1;
+	var b = 1;
+
+	// find a and b to minimise square residuals of dataset
+	var sx    = 0;
+	var sx2   = 0;
+	var slny  = 0;
+	var sxlny = 0;
+	var n     = exponentialPoints.length;
+
+	// loop over each point in dataPoints
+	for(var i=0; i<n; ++i) {
+
+		// get data point
+		point = exponentialPoints[i];
+
+		// increment sums
+		sx    += point.x;
+		sx2   += point.x*point.x;
+		slny  += Math.log(point.y);
+		sxlny += point.x*Math.log(point.y);
+	}
+
+	// calculate a and b
+	b = Math.exp( (slny - n*sxlny/sx) / (sx - n*sx2/sx) );
+	a = Math.exp( slny/n - Math.log(b)*sx/n );
+
+	// set curve function & point function
+	const exponentialFunction = (x) => ( a*Math.pow(b, x) );
+	curveFunction = exponentialFunction;
+	pointFunction = (point) => (point.y > 0);
+
+	// set equation display and code boxes
+	mathText = "y = "+a.toFixed(3)+" × "+b.toFixed(3)+"^x";
+
+	codeboxes[0].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", x)";
+	codeboxes[1].value = a.toFixed(3)+" * Math.Pow("+b.toFixed(3)+", x)";
+	codeboxes[2].value = a.toFixed(3)+" * Math.pow("+b.toFixed(3)+", x)";
+	codeboxes[3].value = a.toFixed(3)+" * "+b.toFixed(3)+"**x";
+	codeboxes[4].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", x)";
 }
 
 function fourierSeries(startX, endX, maxFreq) {
 
-	// period is the length of 1 complete cycle
+	// period is the length of 1 Complexete cycle
 	var period = endX - startX;
 
 	// get sorted list of points within the target period
@@ -198,54 +269,25 @@ function fourierSeries(startX, endX, maxFreq) {
 	const fourierFunction = (x) => (c.reduce( (acc, cur, idx) => ( acc + comMul(cur, comExp(2*Math.PI*(idx-maxFreq)*x/period)).re ), 0 )/period );
 	curveFunction = fourierFunction;
 	pointFunction = (point) => (point.x >= startX && point.x <= startX+period);
-}
 
-function exponentialRegression() {
+	// get positive frequencies
+	cpos = c.slice(maxFreq);
 
-	// get points above 0
-	var exponentialPoints = dataPoints.filter( (point) => (point.y > 0) );
+	// variables to help format code
+	var cosccpp = " * cos(M_PI*";
+	var coscsh  = " * Math.Cos(Math.PI*";
+	var cosjs   = " * Math.cos(Math.PI*";
+	var cospy   = " * math.cos(math.pi*";
+	var coshlsl = " * cos(pi*";
 
-	// function is y=ab^x
-	var a = 1;
-	var b = 1;
+	// code ouput function
+	outputCode = (c_arr, coslang) => (c_arr.reduce( (acc, cur, idx) => (acc + (acc=="" ? (cur.mod()/period).toFixed(3) : " + "+(cur.mod()*2/period).toFixed(3)) + (acc=="" ? "" : coslang+(2*idx/period).toFixed(3)+"*x + "+cur.arg().toFixed(3)+")") ), "" ));
 
-	// find a and b to minimise square residuals of dataset
-	var sx    = 0;
-	var sx2   = 0;
-	var slny  = 0;
-	var sxlny = 0;
-	var n     = exponentialPoints.length;
-
-	// loop over each point in dataPoints
-	for(var i=0; i<n; ++i) {
-
-		// get data point
-		point = exponentialPoints[i];
-
-		// increment sums
-		sx    += point.x;
-		sx2   += point.x*point.x;
-		slny  += Math.log(point.y);
-		sxlny += point.x*Math.log(point.y);
-	}
-
-	// calculate a and b
-	b = Math.exp( (slny - n*sxlny/sx) / (sx - n*sx2/sx) );
-	a = Math.exp( slny/n - Math.log(b)*sx/n );
-
-	// set curve function & point function
-	const exponentialFunction = (x) => ( a*Math.pow(b, x) );
-	curveFunction = exponentialFunction;
-	pointFunction = (point) => (point.y > 0);
-
-	// set equation display and code boxes
-	mathText = "y = "+a.toFixed(3)+" × "+b.toFixed(3)+"^x";
-
-	codeboxes[0].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", x)";
-	codeboxes[1].value = a.toFixed(3)+" * Math.Pow("+b.toFixed(3)+", x)";
-	codeboxes[2].value = a.toFixed(3)+" * Math.pow("+b.toFixed(3)+", x)";
-	codeboxes[3].value = a.toFixed(3)+" * "+b.toFixed(3)+"**x";
-	codeboxes[4].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", x)";
+	codeboxes[0].value = outputCode(cpos, cosccpp).replace("+ -", "- ");
+	codeboxes[1].value = outputCode(cpos, coscsh).replace("+ -", "- ");
+	codeboxes[2].value = outputCode(cpos, cosjs).replace("+ -", "- ");
+	codeboxes[3].value = outputCode(cpos, cospy).replace("+ -", "- ");
+	codeboxes[4].value = outputCode(cpos, coshlsl).replace("+ -", "- ");
 }
 
 

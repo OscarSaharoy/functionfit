@@ -13,6 +13,7 @@ var mathspan  = document.getElementById("mathspan");
 
 var regressionFunctions = [() => (linearRegression()),
 						   () => (polynomialRegression(parseFloat(polynomialTerms.value))),
+						   () => (powerlawRegression()),
 						   () => (exponentialRegression()),
 						   () => (fourierSeries(parseFloat(fourierStart.value), parseFloat(fourierEnd.value), parseFloat(fourierTerms.value)))];
 

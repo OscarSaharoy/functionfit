@@ -7,6 +7,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@600&display=swap" rel="stylesheet">
 	<link href="functionfit.css" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
@@ -31,9 +32,9 @@
 			<ol>
 				<button class="equationButton" onClick="equationSelect(0)"> linear </button>
 				<button class="equationButton" onClick="equationSelect(1)"> polynomial </button>
-				<button class="equationButton" onClick="equationSelect(2)"> exponential </button>
-				<button class="equationButton" onClick="equationSelect(3)"> fourier series </button>
-				<button class="equationButton" onClick="equationSelect(4)"> arbitrary function </button>
+				<button class="equationButton" onClick="equationSelect(2)"> power law </button>
+				<button class="equationButton" onClick="equationSelect(3)"> exponential </button>
+				<button class="equationButton" onClick="equationSelect(4)"> fourier series </button>
 			</ol>
 			<h3> Options: </h3>
 
@@ -42,7 +43,7 @@
 
 			<div class="options" id="options-polynomial">
 				<h4> Polynomial Order </h4>
-				<input id="polynomial-terms" value="3" onchange="regressionFunction()">
+				<input id="polynomial-terms" value="4" onchange="regressionFunction()">
 			</div>
 
 			<div class="options" id="options-exponential">
