@@ -17,7 +17,7 @@ head {
 
 body {
 	width: 100%;
-	background-image: linear-gradient(to bottom right, #44EBF8, #30F35E);
+	background-image: linear-gradient(to bottom right, #44EBF8, #54F330);
 	margin: 3rem 0;
 }
 
@@ -72,14 +72,14 @@ ol button {
 	font-size: 1rem;
 	padding: 2rem 0.5rem;
 	background: white;
-	border: 3px solid #30F35E;
+	border: 3px solid #54F330;
 	border-radius: 1rem;
 	align-content: center;
 	cursor: pointer;
 }
 
 ol button:hover {
-	border: 3px solid #44EBF8;
+	border: 3px solid #0de340;
 }
 
 ol button:active {
@@ -102,7 +102,7 @@ ol button:active {
 .options input {
 	grid-column: 2;
 	padding: 0.5rem;
-	border: 3px solid #30F35E;
+	border: 3px solid #54F330;
 	border-radius: 1rem;
 	text-align: center;
 	width: 5rem;
@@ -135,7 +135,7 @@ ol button:active {
 .codes textarea {
 	grid-column: 2;
 	padding: 1rem;
-	border: 3px solid #30F35E;
+	border: 3px solid #54F330;
 	border-radius: 1rem;
 }
 
@@ -155,7 +155,7 @@ ol button:active {
 
 a {
 	text-decoration: none;
-	color: #30F35E;
+	color: #54F330;
 }
 
 a:hover {
@@ -163,5 +163,5 @@ a:hover {
 }
 
 a:visited {
-	color: #30F35E;
+	color: #54F330;
 }

@@ -9,6 +9,16 @@ class Point {
 	}
 }
 
+function addp(pointA, pointB) {
+
+	return new Point(pointA.x+pointB.x, pointA.y+pointB.y);
+}
+
+function scalep(point, S) {
+
+	return new Point(S*point.x, S*point.y);
+}
+
 // get canvas and drawing context
 var canvas = document.getElementById("canvasgraph");
 var ctx    = canvas.getContext("2d");
@@ -252,7 +262,7 @@ function draw() {
 	}
 
 	// set style for curve
-	ctx.strokeStyle = "#30F35E";
+	ctx.strokeStyle = "#54F330";
 	ctx.lineWidth   = 2;
 
 	// draw curve if a curve function is set
@@ -294,7 +304,7 @@ function draw() {
 	for(var point of dataPoints) {
 
 		// use pointFunction to determine point colour
-		var pointColour = pointFunction(point) ? "#30F35E" : "#bbbbbb";
+		var pointColour = pointFunction(point) ? "#54F330" : "#bbbbbb";
 		drawPoint(pointColour, point.x, point.y);
 	}
 	
