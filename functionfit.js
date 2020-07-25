@@ -193,6 +193,50 @@ function exponentialRegression() {
 	codeboxes[4].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", x)";
 }
 
+function bellcurveRegression() {
+
+	// y = ab^(x^-2)
+
+	// get points above 0
+	var bellcurvePoints = dataPoints.filter( (point) => (point.y > 0) );
+
+	// find a and b to minimise square residuals of dataset
+	var sx2    = 0;
+	var sx4    = 0;
+	var slny   = 0;
+	var sx2lny = 0;
+	var n      = bellcurvePoints.length;
+
+	// loop over each point in bellcurvePoints
+	for(var P of bellcurvePoints) {
+
+		var x2  = P.x*P.x;
+		var lny = Math.log(P.y);
+
+		sx2    += x2;
+		sx4    += x2*x2;
+		slny   += lny;
+		sx2lny += x2*lny;
+	}
+	
+	var lnb = (sx2lny - slny*sx2/n) / (sx2*sx2/n - sx4);
+	var lna = slny/n + sx2*lnb/n;
+
+	var a   = Math.exp(lna);
+	var b   = Math.exp(lnb);
+
+	// set curve function & point function
+	const bellcurveFunction = (x) => ( a*Math.pow(b, -(x*x)) );
+	curveFunction = bellcurveFunction;
+	pointFunction = (point) => (point.y > 0);
+
+	codeboxes[0].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", -x*x)";
+	codeboxes[1].value = a.toFixed(3)+" * Math.Pow("+b.toFixed(3)+", -x*x)";
+	codeboxes[2].value = a.toFixed(3)+" * Math.pow("+b.toFixed(3)+", -x*x)";
+	codeboxes[3].value = a.toFixed(3)+" * "+b.toFixed(3)+"**(-x**2)";
+	codeboxes[4].value = a.toFixed(3)+" * pow("+b.toFixed(3)+", -x*x)";
+}
+
 function fourierSeries(startX, endX, maxFreq) {
 
 	// period is the length of 1 Complexete cycle
