@@ -63,14 +63,13 @@ h3 {
 
 ol {
 	grid-gap: 1.5rem;
-	grid-template-columns: 1fr 1fr 1fr 1fr;
+	grid-template-columns: 1fr 1fr 1fr;
 	padding-bottom: 1.5rem;
 }
 
 ol button {
 	font-family: "Comfortaa", sans-serif;
 	font-size: 1rem;
-	grid-row: 1;
 	padding: 2rem 0.5rem;
 	background: white;
 	border: 3px solid #30F35E;

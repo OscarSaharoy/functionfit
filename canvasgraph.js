@@ -103,8 +103,8 @@ function mousedown(event) {
 function mousemove(event) {
 
 	// get mousepos for display at top of graph and close data point
-	mousePosX      = canvasToGraphX(event.offsetX*dpr);
-	mousePosY      = canvasToGraphY(event.offsetY*dpr);
+	mousePosX = canvasToGraphX(event.offsetX*dpr);
+	mousePosY = canvasToGraphY(event.offsetY*dpr);
 
 	// handle panning the graph
 	if(mouseclicked && closeDataPoint == -1) {
@@ -294,13 +294,8 @@ function draw() {
 	for(var point of dataPoints) {
 
 		// use pointFunction to determine point colour
-		ctx.strokeStyle = pointFunction(point) ? "#30F35E" : "#bbbbbb";
-
-		// draw circle on each point
-		ctx.beginPath();
-		ctx.arc(graphToCanvasX(point.x), graphToCanvasY(point.y), rem/2, 0, 6.28);
-		ctx.fill();
-		ctx.stroke();
+		var pointColour = pointFunction(point) ? "#30F35E" : "#bbbbbb";
+		drawPoint(pointColour, point.x, point.y);
 	}
 	
 	requestAnimationFrame(draw);
@@ -309,23 +304,22 @@ function draw() {
 // get index of close dataPoint in the dataPoints array or -1 if none are close
 function getCloseDataPoint(x, y) {
 
-	// loop over data points
-	for(var i=0; i<dataPoints.length; ++i) {
+	const closeEnough = point => graphToCanvasScaleX(point.x-x) * graphToCanvasScaleX(point.x-x)
+			   				   + graphToCanvasScaleY(point.y-y) * graphToCanvasScaleY(point.y-y)
+			   				   < rem*rem/2
 
-		point = dataPoints[i];
+	return dataPoints.findIndex(closeEnough);
+}
 
-		// scale distance to canvas space
-		var distX = graphToCanvasScaleX(point.x-x);
-		var distY = graphToCanvasScaleY(point.y-y);
+function drawPoint(colour, x, y) {
 
-		// if point is close enough then return it
-		if( distX*distX + distY*distY < rem*rem/2 ) {
+	ctx.strokeStyle = colour;
 
-			return i;
-		}
-	}
-	
-	return -1;
+	// draw circle on point
+	ctx.beginPath();
+	ctx.arc(graphToCanvasX(x), graphToCanvasY(y), rem/2, 0, 6.28);
+	ctx.fill();
+	ctx.stroke();
 }
 
 

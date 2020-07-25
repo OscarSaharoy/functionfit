@@ -33,8 +33,9 @@
 				<button class="equationButton" onClick="equationSelect(0)"> linear </button>
 				<button class="equationButton" onClick="equationSelect(1)"> polynomial </button>
 				<button class="equationButton" onClick="equationSelect(2)"> power law </button>
-				<button class="equationButton" onClick="equationSelect(3)"> exponential </button>
-				<button class="equationButton" onClick="equationSelect(4)"> fourier series </button>
+				<button class="equationButton" onClick="equationSelect(3)"> bell curve </button>
+				<button class="equationButton" onClick="equationSelect(4)"> exponential </button>
+				<button class="equationButton" onClick="equationSelect(5)"> fourier series </button>
 			</ol>
 			<h3> Options: </h3>
 
@@ -47,6 +48,9 @@
 			</div>
 
 			<div class="options" id="options-exponential">
+			</div>
+
+			<div class="options" id="options-bellcurve">
 			</div>
 
 			<div class="options" id="options-fourier">
@@ -68,7 +72,6 @@
 		<div class="function-box">
 			<h3> Optimized function: </h3>
 			<canvas id="mathcanvas" width=10 height=10> </canvas>
-			<script src="mathcanvas.js" type="text/javascript"> </script>
 		</div>
 
 		<div class="code-box">
