@@ -3,104 +3,101 @@
 <html>
 
 <head> 
-	<title> function.fit </title>
-	<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@600&display=swap" rel="stylesheet">
-	<link href="functionfit.css" rel="stylesheet">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> function.fit </title>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link href="functionfit.css" rel="stylesheet">
 </head>
 
 <body>
 
-	<div class="central">
+<div class="central">
 
-		<div class="title-box">
-			<h2> function.fit </h2>
-			<h3> visualise and generate functions </h3>
-		</div>
+    <div class="title-box">
+        <h2> function.fit </h2>
+        <h3> visualise and generate functions </h3>
+    </div>
 
-		<div class="graph-box">
-			<h3> Place points on the graph: </h3>
-			<canvas width=600 height=350 id="canvasgraph"> </canvas>
-			<script src="quickMaths.js" type="text/javascript"> </script>
-			<script src="functionfit.js" type="text/javascript"> </script>
-			<script src="canvasgraph.js" type="text/javascript"> </script>
-		</div>	
+    <div class="graph-box">
+        <h3> Place points on the graph: </h3>
+        <canvas width=600 height=350 id="graphjs"> </canvas>
+    </div>    
 
-		<div class="button-box">
-			<h3> Select function type: </h3>
-			<ol>
-				<button class="equationButton" onClick="equationSelect(0)"> linear </button>
-				<button class="equationButton" onClick="equationSelect(1)"> polynomial </button>
-				<button class="equationButton" onClick="equationSelect(2)"> power law </button>
-				<button class="equationButton" onClick="equationSelect(3)"> bell curve </button>
-				<button class="equationButton" onClick="equationSelect(4)"> exponential </button>
-				<button class="equationButton" onClick="equationSelect(5)"> fourier series </button>
-			</ol>
-			<h3> Options: </h3>
+    <div class="button-box">
+        <h3> Select function type: </h3>
+        <ol>
+            <button onClick="equationSelect(0)"> linear </button>
+            <button onClick="equationSelect(1)"> polynomial </button>
+            <button onClick="equationSelect(2)"> power law </button>
+            <button onClick="equationSelect(3)"> bell curve </button>
+            <button onClick="equationSelect(4)"> exponential </button>
+            <button onClick="equationSelect(5)"> fourier series </button>
+        </ol>
 
-			<div class="options" id="options-linear">
-			</div>
+        <div class="options" id="options-linear">
+            <p class="equation-label"> form: <span class="maths"> y = ax + b </span> </p>
+        </div>
 
-			<div class="options" id="options-polynomial">
-				<h4> Polynomial Order </h4>
-				<input id="polynomial-terms" value="4" onchange="regressionFunction()">
-			</div>
+        <div class="options" id="options-polynomial">
+            <p class="equation-label"> form: <span class="maths"> y = a + bx + cx² + ... </span> </p> 
+            <h4> Polynomial Order </h4>
+            <input id="polynomial-terms" value="4" onchange="regressionFunction()">
+        </div>
 
-			<div class="options" id="options-powerlaw">
-			</div>
+        <div class="options" id="options-powerlaw">
+            <p class="equation-label"> form: <span class="maths"> y = ax<sup>b</sup> </span> </p>    
+        </div>
 
-			<div class="options" id="options-bellcurve">
-			</div>
+        <div class="options" id="options-bellcurve">
+            <p class="equation-label"> form: <span class="maths"> y = ab<sup>-x²</sup> </span> </p>    
+        </div>
 
-			<div class="options" id="options-exponential">
-			</div>
+        <div class="options" id="options-exponential">
+            <p class="equation-label"> form: <span class="maths"> y = ab<sup>x</sup> </span> </p>    
+        </div>
 
-			<div class="options" id="options-fourier">
-				<h4> Maximum Frequency Component </h4>
-				<input id="fourier-terms" value="3" onchange="regressionFunction()">
-				<h4> Sample Period Start </h4>
-				<input id="fourier-start" value="-1" onchange="regressionFunction()">
-				<h4> Sample Period End </h4>
-				<input id="fourier-end" value="1" onchange="regressionFunction()">
-			</div>
+        <div class="options" id="options-fourier">
+            <p class="equation-label"> form: <span class="maths"> y = ∑<span class="under"> n </span> a <em>cos(</em><span class="small">nπ + φ</span><em>)</em> </span> </p>    
+            <h4> Maximum Frequency Component </h4>
+            <input id="fourier-terms" value="3" onchange="regressionFunction()">
+            <h4> Sample Period Start </h4>
+            <input id="fourier-start" value="-1" onchange="regressionFunction()">
+            <h4> Sample Period End </h4>
+            <input id="fourier-end" value="1" onchange="regressionFunction()">
+        </div>
 
-			<div class="options" id="options-arbitrary">
-				<h4> Formula </h4>
-				<input value="3">
-			</div>
+        <div class="options" id="options-arbitrary">
+            <h4> Formula </h4>
+            <input value="3">
+        </div>
 
-		</div>
+    </div>
 
-		<div class="function-box">
-			<h3> Optimized function: </h3>
-			<canvas id="mathcanvas" width=10 height=10> </canvas>
-		</div>
+    <div class="code-box">
+        <h3> Function code: </h3>   
 
-		<div class="code-box">
-			<h3> Function code: </h3>
-			<div class="codes">
-				<h4> C/C++ </h4>
-				<textarea class="codebox" id="cc++"></textarea>
-				<h4> C# </h4>
-				<textarea class="codebox" id="c#"></textarea>
-				<h4> JavaScript </h4>
-				<textarea class="codebox" id="js"></textarea>
-				<h4> Python </h4>
-				<textarea class="codebox" id="python"></textarea>
-				<h4> HLSL </h4>
-				<textarea class="codebox" id="hlsl"></textarea>
-			</div>
-		</div>
+        <div class="codes">
+            <h4> JavaScript<br>(editable) </h4>
+            <textarea class="codebox" id="js"></textarea>
+            <h4> C/C++ </h4>
+            <textarea class="codebox" id="cc++"></textarea>
+            <h4> C# </h4>
+            <textarea class="codebox" id="c#"></textarea>
+            <h4> Python </h4>
+            <textarea class="codebox" id="python"></textarea>
+            <h4> HLSL </h4>
+            <textarea class="codebox" id="hlsl"></textarea>
+        </div>  
+    </div>
 
-		<footer>
-			<h3> Made by Oscar Saharoy </h3>
-			<a href="https://www.github.com/OscarSaharoy"> <h3> github </h3> </a> 
-		</footer>
-			
-		<script src="controls.js" type="text/javascript"> </script>
+    <footer>
+        <h3> Made by Oscar Saharoy </h3>
+        <a href="https://www.github.com/OscarSaharoy"> <h3> github </h3> </a> 
+    </footer>
 
-	</div>
+</div>
+
+<script type="text/javascript" src="functionfit.js"> </script>
 
 </body>
 
