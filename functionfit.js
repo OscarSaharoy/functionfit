@@ -1089,7 +1089,7 @@ function exponentialRegression() {
 
 function bellcurveRegression() {
 
-    // y = ab^(x^-2)
+    // y = ab^-(x^2)
 
     // get points above 0
     var bellcurvePoints = dataPoints.filter( (point) => (point.y > 0) );
@@ -1107,9 +1107,9 @@ function bellcurveRegression() {
         var x2  = P.x*P.x;
         var lny = Math.log(P.y);
 
-        sx2    += x2;
-        sx4    += x2*x2;
-        slny   += lny;
+        sx2    += x2    ;
+        sx4    += x2*x2 ;
+        slny   += lny   ;
         sx2lny += x2*lny;
     }
     
