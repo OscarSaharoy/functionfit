@@ -16,24 +16,21 @@ html {
 }
 
 body {
+    background: #F9FDFD;
 	width: 100vw;
-	background-image: linear-gradient(to bottom right, #44EBF8, #54F330);
 	padding: 2rem;
     display: grid;
     overflow-x: hidden;
     justify-self: center;
     justify-content: center;
-
 }
 
 .central {
 	width: calc( 100vw - 4rem );
 	max-width: 60rem;
     min-width: min-content;
-	background: white;
 	padding: 3rem;
 	border-radius: 3rem;
-	box-shadow: 8px 8px 14px 0 rgba(0, 0, 0, 0.5);
 	text-align: center;
     user-select: none;
     justify-self: center;
@@ -104,6 +101,116 @@ p {
     touch-action: none;
 }
 
+.dropdown {
+    text-align: center;
+    width: 17rem;
+    height: calc(6px + 1.6rem + 1rem + 1.4rem);
+    background: transparent;
+    align-content: center;
+    cursor: pointer;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dropdown .inner {
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1;
+    border: 3px solid #8decd3;
+    border-radius: 1rem;
+    align-content: center;
+    padding: 0.8rem 1.32rem;
+    position: absolute;
+    background: #F9FDFD;
+    z-index: 1;
+}
+
+.dropdown .inner:focus-within,
+.dropdown .inner:focus,
+.dropdown .inner:hover {
+    box-shadow: 0 0 0 2px #44EBF8;
+}     
+
+.dropdown p {
+    height: calc(1.4rem + 1rem);
+    padding: 0.7rem 0;
+    line-height: 1;
+    transform: scale(1);
+    opacity: 1;
+    transition: opacity 0.132s, transform 0.132s, height 0.22s, padding 0.22s;
+}
+
+.dropdown .hidden {
+    height: 0rem;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.dropdown p:hover,
+.dropdown p:focus {
+    transform: scale(1.2);
+}
+  
+
+
+
+/*.dropdown2 {
+    width: 17rem;
+    height: calc(6px + 1.6rem + 1rem + 1.4rem);
+    cursor: pointer;
+    position: relative;
+}
+
+.dropdown2 .background {
+    width: 100%;
+    height: 100%;
+    border: 3px solid #8decd3;
+    border-radius: 1rem;
+    position: absolute;
+    background: #F9FDFD;
+    z-index: 1;
+    transform: scaleY(1);
+    transition: transform 0.132s;
+    transform-origin: top;
+}
+
+.dropdown2 .items {
+    align-self: center;
+    position: relative;
+    width: 100%;
+    height: 1rem;
+}
+
+.dropdown2 p {
+    width: 100%;
+    text-align: center;
+    --index: 0;
+    line-height: 1;
+    transform: translateY( calc(var(--index) * 2.4rem) ) scale(1);
+    transition: transform 0.132s;
+    position: absolute;
+    z-index: 1;
+}
+
+.dropdown2 p:hover {
+    transform: translateY( calc(var(--index) * 2.4rem) ) scale(1.2);
+}
+
+.dropdown2 .selected {
+    transform: translateY(0) scale(1);
+}
+
+.dropdown2 .selected:hover {
+    transform: translateY(0) scale(1.2);
+}
+
+.dropdown2 .hidden {
+    transform: translateY(0) scale(0);
+}*/
+
+
+
 .button-box h3 {
 	margin-bottom: 1.2rem;
 }
@@ -118,11 +225,11 @@ p {
 	font-family: "Comfortaa", sans-serif;
 	font-size: 1rem;
 	padding: 1rem 0.75rem;
-	background: white;
-	border: 3px solid #54F330;
+    border: 3px solid #8decd3;
 	border-radius: 1rem;
 	align-content: center;
 	cursor: pointer;
+    background: transparent;
     transform: scale(1);
     transition: transform 0.2s;
 }
@@ -164,8 +271,9 @@ p {
 .options input {
 	grid-column: 2;
 	padding: 0.5rem;
-	border: 3px solid #54F330;
+    border: 3px solid #8decd3;
 	border-radius: 1rem;
+    background: transparent;
 	text-align: center;
 	width: 5rem;
 	justify-self: left;
@@ -195,7 +303,8 @@ p {
 .codes textarea {
 	grid-column: 2;
 	padding: 1rem;
-	border: 3px solid #54F330;
+    background: transparent;
+    border: 3px solid #8decd3;
 	border-radius: 1rem;
     font-family: Consolas, monospace;
 }
@@ -221,7 +330,7 @@ p {
 
 a {
 	text-decoration: none;
-	color: #54F330;
+    color: #8decd3;
 }
 
 a:hover {

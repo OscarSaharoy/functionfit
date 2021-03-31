@@ -22,17 +22,21 @@
         <h3> Place points on the graph: </h3>
         <canvas width=600 height=350 id="graphjs"> </canvas>
     </div>    
-
+    
     <div class="button-box">
-        <h3> Select function type: </h3>
-        <ol>
-            <button onClick="equationSelect(0)"> linear </button>
-            <button onClick="equationSelect(1)"> polynomial </button>
-            <button onClick="equationSelect(2)"> power law </button>
-            <button onClick="equationSelect(3)"> bell curve </button>
-            <button onClick="equationSelect(4)"> exponential </button>
-            <button onClick="equationSelect(5)"> fourier series </button>
-        </ol>
+
+        <div class="dropdown" id="function-dropdown" tabindex="0">
+            <!-- inner div provides the border -->
+            <div class="inner">          
+            <!-- all dropdown elements need tabindex="0" to be focusable!! -->
+                <p tabindex="0"> linear fit </p>
+                <p tabindex="0"> polynomial fit </p>
+                <p tabindex="0"> power law </p>
+                <p tabindex="0"> bell curve </p>
+                <p tabindex="0"> exponential </p>
+                <p tabindex="0"> fourier series </p>
+            </div>
+        </div>
 
         <div class="options" id="options-linear">
             <p class="equation-label"> form: <span class="maths"> y = ax + b </span> </p>
@@ -97,6 +101,9 @@
 
 </div>
 
+<script type="text/javascript" src="graph.js"> </script>
+<script type="text/javascript" src="dropDown.js"> </script>
+<script type="text/javascript" src="quickMaths.js"> </script>
 <script type="text/javascript" src="functionfit.js"> </script>
 
 </body>
