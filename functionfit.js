@@ -63,7 +63,7 @@ var dataPoints     = [new vec2(-2.0, -0.5), new vec2(-0.8, 0.2), new vec2(0, -0.
 // initial function values
 var curveFunction  = x => NaN;
 var pointFunction  = (point) => (true);
-var regressionFunction = () => linearRegression();
+var regressionFunction = () => {};
 
 
 
@@ -163,9 +163,8 @@ var fourierTerms    = document.getElementById("fourier-terms");
 var fourierStart    = document.getElementById("fourier-start");
 var fourierEnd      = document.getElementById("fourier-end");
 
-var buttons   = document.querySelectorAll("ol button");
-var options   = document.getElementsByClassName("options");
-var codeboxes = document.getElementsByClassName("codebox");
+var options   = Array.from( document.getElementsByClassName("options") );
+var codeboxes = Array.from( document.getElementsByClassName("codebox") );
 var mathspan  = document.getElementById("mathspan");
 
 var regressionFunctions = [() => (linearRegression()),
@@ -177,17 +176,13 @@ var regressionFunctions = [() => (linearRegression()),
 
 functionDropdown.onchange = equationSelect;
 
-function equationSelect( num ) {
+function equationSelect( idx ) {
     
-    // highlight clicked button
-    for(var i=0; i<buttons.length; ++i) {
-
-        buttons[i].className     = i==num ? "buttonActive" : "";
-        options[i].style.display = i==num ? "grid"   : "none";
-    }
+    // show options for current fit
+    options.forEach( (elm, i) => elm.style.display = i==idx ? "grid" : "none" );
 
     // set regression mode and update regression model
-    regressionFunction = regressionFunctions[num];
+    regressionFunction = regressionFunctions[idx];
     regressionFunction();
 }
 
@@ -575,4 +570,4 @@ function functionIteration(nbeta = 4, func = freakedExponential) {
     return [iteratedFunction, (point) => (true)];
 }
 
-regressionFunction();
+equationSelect(0);
