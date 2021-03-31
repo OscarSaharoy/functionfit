@@ -224,7 +224,8 @@ class Graph {
         this.redraw();
 
         // link all the events to their callbacks
-        window.addEventListener(      "resize",       event => this.resize(      event ) );
+        new ResizeObserver( () => this.resize() ).observe( this.canvas );
+
         this.canvas.addEventListener( "mousemove",    event => this.mousemove(   event ) );
         this.canvas.addEventListener( "pointerdown",  event => this.pointerdown( event ) );
         this.canvas.addEventListener( "pointerup",    event => this.pointerup(   event ) );

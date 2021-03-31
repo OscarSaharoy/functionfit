@@ -2,6 +2,10 @@
 
 const functionDropdown = new DropDown("function-dropdown");
 const graph = new Graph("graphjs");
+const pointsTextarea = document.querySelector("#points-textarea");
+
+pointsTextarea.addEventListener( "focusin",  () => pointsTextarea.style.height = "25rem" )
+pointsTextarea.addEventListener( "focusout", () => pointsTextarea.style.height = "100%"  )
 
 function drawPoint(graph, colour, pos) {
 
@@ -165,7 +169,7 @@ var fourierEnd      = document.getElementById("fourier-end");
 
 var options   = Array.from( document.getElementsByClassName("options") );
 var codeboxes = Array.from( document.getElementsByClassName("codebox") );
-var mathspan  = document.getElementById("mathspan");
+var eqnLabel  = document.getElementById("equation-label");
 
 var regressionFunctions = [() => (linearRegression()),
                            () => (polynomialRegression(parseFloat(polynomialTerms.value))),
@@ -187,6 +191,8 @@ function equationSelect( idx ) {
 }
 
 function linearRegression() {
+
+
 
     // y = mx+c
 
