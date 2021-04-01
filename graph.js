@@ -269,6 +269,8 @@ class Graph {
 
     pointerdown( event ) {
 
+        event.preventDefault();
+
         // if the event's target element is in the preventDrag array then return
         //if( preventDrag.reduce( (result, elm) => result || elm == event.target, false) ) return;
 

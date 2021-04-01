@@ -1,76 +1,5 @@
 // Oscar Saharoy 2021
 
-const functionDropdown = new DropDown("function-dropdown");
-const graph = new Graph("graphjs");
-const pointsTextarea = document.querySelector("#points-textarea");
-
-pointsTextarea.addEventListener( "focusin",  () => pointsTextarea.style.height = "25rem" )
-pointsTextarea.addEventListener( "focusout", () => pointsTextarea.style.height = "100%"  )
-
-function drawPoint(graph, colour, pos) {
-
-    // setup ctx style
-    graph.ctx.strokeStyle = colour;
-    graph.ctx.lineWidth   = 3;
-    graph.ctx.fillStyle   = "white";
-
-    // draw circle at pos
-    graph.ctx.beginPath();
-    graph.ctx.arc( pos.x, pos.y, graph.rem/2, 0, 6.28 );
-    graph.ctx.fill();
-    graph.ctx.stroke();
-}
-
-function drawPoints( graph ) {
- 
-    // loop over and draw each point
-    for(var point of dataPoints) {
-
-        // use pointFunction to determine point colour
-        var pointColour = pointFunction(point) ? "#8decd3" : "#bbbbbb";
-        drawPoint( graph, pointColour, graph.graphToCanvas( point ) );
-    }
-}
-
-function drawCurve(graph) {
-
-    // get the visible range of x values on the graph
-    const [minX, maxX] = graph.xRange;
-    const width = maxX - minX;
-
-    // set style for curve
-    graph.ctx.strokeStyle = "#8decd3";
-    graph.ctx.lineWidth   = 3;
-    graph.ctx.beginPath();
-
-    // loop over the range of x currently visible and plot the curve at 300 points
-    for( var x = minX; x < maxX; x += width/300 ) {
-
-        // get y coord at that value of x
-        var canvasY = graph.graphToCanvasY( curveFunction(x) );
-
-        // limit y coord so that stroke works properly
-        canvasY = canvasY > graph.canvasSize.y+10 ? graph.canvasSize.y+10 : canvasY < -10 ? -10 : canvasY;
-
-        graph.ctx.lineTo( graph.graphToCanvasX(x), canvasY );
-    }
-
-    graph.ctx.stroke();
-}
-
-// add our draw functions onto the standard graph ones
-graph.userDrawFunctions.push( drawCurve, drawPoints );
-
-// data variables
-var dataPoints     = [new vec2(-2.0, -0.5), new vec2(-0.8, 0.2), new vec2(0, -0.3), new vec2(0.6, 0.5), new vec2(2.0, 1.5)];
-
-// initial function values
-var curveFunction  = x => NaN;
-var pointFunction  = (point) => (true);
-var regressionFunction = () => {};
-
-
-
 // return the first point found close to mousePos
 const areClose = (point1, point2) => vec2.sqrDist( graph.graphToCanvas(point1), graph.graphToCanvas(point2) ) < graph.rem*25
 const getClosePoint = mousePos => dataPoints.reduce( (acc, val) => acc ? acc : areClose(mousePos, val) ? val : null, null );
@@ -149,50 +78,126 @@ function pointerup() {
     regressionFunction();
 }
 
+
+function drawPoint(graph, colour, pos) {
+
+    // setup ctx style
+    graph.ctx.strokeStyle = colour;
+    graph.ctx.lineWidth   = 3;
+    graph.ctx.fillStyle   = "white";
+
+    // draw circle at pos
+    graph.ctx.beginPath();
+    graph.ctx.arc( pos.x, pos.y, graph.rem/2, 0, 6.28 );
+    graph.ctx.fill();
+    graph.ctx.stroke();
+}
+
+function drawPoints( graph ) {
+ 
+    // loop over and draw each point
+    for(var point of dataPoints) {
+
+        // use pointFunction to determine point colour
+        var pointColour = pointFunction(point) ? "#8decd3" : "#bbbbbb";
+        drawPoint( graph, pointColour, graph.graphToCanvas( point ) );
+    }
+}
+
+function drawCurve(graph) {
+
+    // get the visible range of x values on the graph
+    const [minX, maxX] = graph.xRange;
+    const width = maxX - minX;
+
+    // set style for curve
+    graph.ctx.strokeStyle = "#8decd3";
+    graph.ctx.lineWidth   = 3;
+    graph.ctx.beginPath();
+
+    // loop over the range of x currently visible and plot the curve at 300 points
+    for( var x = minX; x < maxX; x += width/300 ) {
+
+        // get y coord at that value of x
+        var canvasY = graph.graphToCanvasY( curveFunction(x) );
+
+        // limit y coord so that stroke works properly
+        canvasY = canvasY > graph.canvasSize.y+10 ? graph.canvasSize.y+10 : canvasY < -10 ? -10 : canvasY;
+
+        graph.ctx.lineTo( graph.graphToCanvasX(x), canvasY );
+    }
+
+    graph.ctx.stroke();
+}
+
+const graph = new Graph("graphjs");
+
+// centre the graph but after all the other code
+setTimeout( () => graph.centre = vec2.zero, 0 );
+
+// add our draw functions onto the standard graph ones
+graph.userDrawFunctions.push( drawCurve, drawPoints );
 graph.addEventListener( "mousemove"  , mousemove   );
 graph.addEventListener( "pointerdown", pointerdown );
 graph.addEventListener( "pointermove", pointermove );
 graph.addEventListener( "pointerup"  , pointerup   );
 
 
-// ---------- end functionfit code ----------
+const pointsTextarea = document.querySelector("#points-textarea");
+
+pointsTextarea.addEventListener( "focusin",  () => pointsTextarea.style.height = "25rem" )
+pointsTextarea.addEventListener( "focusout", () => pointsTextarea.style.height = "100%"  )
 
 
-// ---------- regression code ----------
+// points on the graph
+var dataPoints = [new vec2(-2.0, -0.5), new vec2(-0.8, 0.2), new vec2(0, -0.3), new vec2(0.6, 0.5), new vec2(2.0, 1.5)];
 
+// initial function values
+var curveFunction  = x => NaN;
+var pointFunction  = point => true;
+var regressionFunction = () => {};
 
 // setup some variables
-var polynomialTerms = document.getElementById("polynomial-terms");
-var fourierTerms    = document.getElementById("fourier-terms");
-var fourierStart    = document.getElementById("fourier-start");
-var fourierEnd      = document.getElementById("fourier-end");
+const polynomialTerms = document.getElementById("polynomial-terms");
+const fourierTerms    = document.getElementById("fourier-terms");
+const fourierStart    = document.getElementById("fourier-start");
+const fourierEnd      = document.getElementById("fourier-end");
 
-var options   = Array.from( document.getElementsByClassName("options") );
-var codeboxes = Array.from( document.getElementsByClassName("codebox") );
-var eqnLabel  = document.getElementById("equation-label");
+const regressionFunctions = [() => (linearRegression()),
+                             () => (polynomialRegression( parseFloat(polynomialTerms.value) )),
+                             () => (powerlawRegression()),
+                             () => (bellcurveRegression()),
+                             () => (exponentialRegression()),
+                             () => (fourierSeries(parseFloat(fourierStart.value), parseFloat(fourierEnd.value), parseFloat(fourierTerms.value)))];
 
-var regressionFunctions = [() => (linearRegression()),
-                           () => (polynomialRegression(parseFloat(polynomialTerms.value))),
-                           () => (powerlawRegression()),
-                           () => (bellcurveRegression()),
-                           () => (exponentialRegression()),
-                           () => (fourierSeries(parseFloat(fourierStart.value), parseFloat(fourierEnd.value), parseFloat(fourierTerms.value)))];
+const equationLabels = Array.from( document.querySelectorAll( ".equation-label" ) );
+const codeboxes      = Array.from( document.getElementsByClassName("codebox") ); 
 
+const options        = Array.from( document.querySelectorAll( ".options" ) );
+const optionsDict    = { "polynomial fit": document.getElementById("polynomial-options"   ),
+                         "fourier series": document.getElementById("fourierseries-options"),
+                         "custom":         document.getElementById("custom-options"       ) }
+
+const functionDropdown = new DropDown("function-dropdown");
 functionDropdown.onchange = equationSelect;
 
 function equationSelect( idx ) {
     
-    // show options for current fit
-    options.forEach( (elm, i) => elm.style.display = i==idx ? "grid" : "none" );
+    // show equation for current fit
+    equationLabels.forEach( (elm, i) => elm.style.display = i==idx ? "grid" : "none" );
+    options.forEach( elm => elm.style.display = "none" );
+
+    if( optionsDict[ functionDropdown.value ] )
+        optionsDict[ functionDropdown.value ].style.display = "grid";
 
     // set regression mode and update regression model
-    regressionFunction = regressionFunctions[idx];
+    regressionFunction = regressionFunctions[ idx ];
     regressionFunction();
 }
 
 function linearRegression() {
 
-
+    pointsTextarea.value = dataPoints.reduce( (text, vec) => text + `${vec.x.toPrecision(3)}, ${vec.y.toPrecision(3)}\n`, "" );
 
     // y = mx+c
 

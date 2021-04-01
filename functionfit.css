@@ -13,6 +13,7 @@ script, head {
 html {
     font-family: "Comfortaa", sans-serif;
     width: 100vw;
+    justify-content: center;
 }
 
 body {
@@ -22,15 +23,12 @@ body {
     overflow-x: hidden;
     justify-self: center;
     justify-content: center;
+    padding: 4rem 2rem 6rem 2rem;
 }
 
 .central {
-    margin-top: 4rem;
-    margin-bottom: 6rem;
 	width: 100%;
 	max-width: 60rem;
-    min-width: min-content;
-	border-radius: 3rem;
 	text-align: center;
     user-select: none;
     justify-self: center;
@@ -48,14 +46,6 @@ h2 {
 
 p {
     user-select: none;
-}
-
-.equation-label {
-    display: inline;
-    font-size: 1.05rem;
-    font-weight: bold;
-    margin: 0.5rem 0;
-    align-self: center;
 }
 
 .maths {
@@ -92,7 +82,7 @@ p {
 
 .graph-box {
 	display: block;
-    margin-bottom: 2rem;
+    margin-bottom: 1.32rem;
 }
 
 .graph-box canvas {
@@ -110,6 +100,7 @@ p {
     cursor: pointer;
     position: relative;
     -webkit-tap-highlight-color: transparent;
+    display: grid;
 }
 
 .dropdown .inner {
@@ -123,13 +114,17 @@ p {
     position: absolute;
     background: #F9FDFD;
     z-index: 1;
+    display: grid;
+}
+
+.dropdown .inner:hover {
+    border: 3px solid #44EBF8;
 }
 
 .dropdown .inner:focus-within,
-.dropdown .inner:focus,
-.dropdown .inner:hover {
+.dropdown .inner:focus {
     box-shadow: 0 0 0 2px #44EBF8;
-}     
+}
 
 .dropdown p {
     height: calc(1.4rem + 1rem);
@@ -151,49 +146,22 @@ p {
 .dropdown p:focus {
     transform: scale(1.2);
 }
-  
 
+.button-titles {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 1.12rem;
+    margin-bottom: 0.7rem;
+}
+  
 .button-box {
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 1.32rem;
+    grid-gap: 1.12rem;
+    grid-row-gap: 1.32rem;
+    margin-bottom: 1.32rem;
 }
 
 .button-box h3 {
 	margin-bottom: 1.2rem;
-}
-
-.button-box ol {
-	grid-gap: 1.5rem;
-	grid-template-columns: 1fr 1fr 1fr;
-	margin-bottom: 1.2rem;
-}
-
-.button-box button {
-	font-family: "Comfortaa", sans-serif;
-	font-size: 1rem;
-	padding: 1rem 0.75rem;
-    border: 3px solid #8decd3;
-	border-radius: 1rem;
-	align-content: center;
-	cursor: pointer;
-    background: transparent;
-    transform: scale(1);
-    transition: transform 0.2s;
-}
-
-.button-box button:hover {
-	border: 3px solid #44EBF8;
-	transform: scale(1.1);
-}
-
-.button-box button:focus {
-	box-shadow: 0 0 0 2px #44EBF8;
-	transform: scale(1.1);
-}       
-
-.button-box .buttonActive {
-	transform: scale(1.1);
-    font-weight: bold;
 }
 
 #points-holder {
@@ -208,18 +176,32 @@ p {
     position: absolute;
     width: 100%;
     height: 100%;
+    transition: height 0.22s;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+#points-textarea::-webkit-scrollbar {
+    display: none;
+}
+
+.equation-label {
+    display: inline;
+    font-size: 1.05rem;
+    font-weight: bold;
+    margin: 0.5rem 0;
+    align-self: center;
 }
 
 .options {
+    width: 100%;
 	display: none;
 	align-items: center;
 	justify-self: center;
 	justify-items: left;
-	grid-gap: 1rem;
-    margin-bottom: 1.6rem;
-    grid-template-columns: auto auto;
+	grid-gap: 1.12rem;
+    grid-template-columns: 12rem auto 6rem;
     grid-column: 1 / 4;
-    grid-row: 2; 
 }
 
 .options .equation-label {
@@ -229,35 +211,37 @@ p {
 
 .options h4 {
 	grid-column: 1;
+    align-self: center;
+    justify-self: center;
 }
 
-.options input {
-	grid-column: 2;
+.options input[type=number] {
 	padding: 0.5rem;
     border: 3px solid #8decd3;
 	border-radius: 1rem;
     background: transparent;
 	text-align: center;
-	width: 5rem;
-	justify-self: left;
+	justify-self: center;
+    width: 100%;
 	font-family: "Comfortaa", sans-serif;
 	font-size: 1rem;
 }
 
-.options input:hover {
+.options input[type=number]:hover {
 	border: 3px solid #44EBF8;	
 }
 
-.options input:focus {
+.options input[type=number]:focus {
 	box-shadow: 0 0 0 2px #44EBF8;
 } 
 
-.function-box {
-	display: none;
+.options textarea {
+    width: 100%;
+    grid-column: 2 / 4;
 }
 
 .codes {
-	padding-top: 1.2rem;
+	padding-top: 0.9rem;
 	grid-template-columns: 5rem 1fr;
 	grid-gap: 1rem 2rem;
 	padding-bottom: 2.5rem;
@@ -290,11 +274,8 @@ textarea:focus {
 	justify-self: center;
 }
 
-.function-box span {
-	padding-top: 1rem;
-}
-
 a {
+    padding: 0.22rem;
 	text-decoration: none;
     color: #8decd3;
 }
@@ -304,5 +285,75 @@ a:hover {
 }
 
 a:visited {
-	color: #54F330;
+	color: #44EBF8;
+}
+
+
+input[type=range] {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 100%; /* Specific width is required for Firefox. */
+    background: transparent; /* Otherwise white in Chrome */
+    height: 1.5rem;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 1.7rem;
+    width: 1.7rem;
+    border-radius: 0.6rem;
+    background-color: #F9FDFD;
+    cursor: pointer;
+    margin-top: -0.6rem; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+    border: 3px solid #8decd3;
+}
+   
+input[type=range]:hover::-webkit-slider-thumb {
+    border: 3px solid #44EBF8;
+}
+
+input[type=range]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 2px #44EBF8;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 0.5rem;
+  cursor: pointer;
+  background-color: #D6F6EE;
+  border-radius: 0.25rem;
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {    
+    height: 1.7rem;
+    width: 1.7rem;
+    border-radius: 0.6rem;
+    background-color: #F9FDFD;
+    cursor: pointer;
+    border: 3px solid #8decd3;
+}
+   
+input[type=range]:hover::-moz-range-thumb {
+    border: 3px solid #44EBF8;
+}
+
+input[type=range]:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 2px #44EBF8;
+}
+
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 0.5rem;
+    cursor: pointer;
+    background-color: #D6F6EE;
+    border-radius: 0.25rem;
 }
