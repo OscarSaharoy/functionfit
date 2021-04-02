@@ -33,15 +33,15 @@
     <div class="button-box">
 
         <div id="points-holder">
-            <textarea spellcheck="false" id="points-textarea"></textarea>
+            <textarea spellcheck="false" id="points-textarea" oninput="updatePoints()"></textarea>
         </div>
 
         <div class="dropdown" id="function-dropdown">
             <!-- inner div provides the border -->
             <div class="inner" tabindex="0">
                 <!-- all dropdown elements need tabindex="0" to be focusable!! -->
-                <p tabindex="0" class="hidden">linear fit</p>
-                <p tabindex="0" class="hidden">polynomial fit</p>
+                <p tabindex="0" class="hidden">linear</p>
+                <p tabindex="0" class="hidden">polynomial</p>
                 <p tabindex="0" class="hidden">power law</p>
                 <p tabindex="0" class="hidden">bell curve</p>
                 <p tabindex="0" class="hidden">exponential</p>
@@ -61,23 +61,23 @@
         <div class="options" id="polynomial-options">
 
             <h4> polynomial order </h4>
-            <input type="range" value="4" min="0" max="8" step="1" onchange="regressionFunction()"> </input>
-            <input id="polynomial-terms" type="number" value="4" min="0" max="8" step="1" onchange="regressionFunction()"> </input>
+            <input type="range" value="4" min="0" max="8" step="1" onchange="updateModel()"> </input>
+            <input id="polynomial-terms" type="number" value="4" min="0" max="8" step="1" onchange="updateModel()"> </input>
         </div>
 
         <div class="options" id="fourierseries-options">
 
             <h4> frequency limit </h4>
-            <input type="range" value="3" min="0" max="50" step="1" onchange="regressionFunction()"> </input>
-            <input id="fourier-terms" type="number" value="3" onchange="regressionFunction()">
+            <input type="range" value="3" min="0" max="50" step="1" onchange="updateModel()"> </input>
+            <input id="fourier-terms" type="number" value="3" onchange="updateModel()">
 
             <h4> sample period start </h4>
             <input type="range"> </input>
-            <input id="fourier-start" type="number" value="-1" step="0.01" onchange="regressionFunction()">
+            <input id="fourier-start" type="number" value="-1" step="0.01" onchange="updateModel()">
 
             <h4> sample period end </h4>
             <input type="range"> </input>
-            <input id="fourier-end" type="number" value="1" step="0.01" onchange="regressionFunction()">
+            <input id="fourier-end" type="number" value="1" step="0.01" onchange="updateModel()">
         </div>
 
         <div class="options" id="custom-options">

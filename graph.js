@@ -350,13 +350,13 @@ class Graph {
         if( !event.ctrlKey ) {
 
             // have to shift the origin to make the mouse the centre of enlargement
-            this.originOffset.x       += event.offsetX * this.dpr * zoomAmount * this.canvasToGraphScale.x;
+            this.originOffset.x       += event.offsetX * zoomAmount * this.canvasToGraphScale.x;
             this.canvasToGraphScale.x *= 1 + zoomAmount;
         }
 
         if( !event.shiftKey ) {
 
-            this.originOffset.y       += event.offsetY * this.dpr * zoomAmount * this.canvasToGraphScale.y;
+            this.originOffset.y       += event.offsetY * zoomAmount * this.canvasToGraphScale.y;
             this.canvasToGraphScale.y *= 1 + zoomAmount;
         }
     }
@@ -402,8 +402,8 @@ class Graph {
         const graphSize = vec2.mul( this.canvasSize, this.canvasToGraphScale ).abs();
 
         // calculate space between the gridlines in graph units
-        var gridlineSpacingX = Math.pow(10, Math.floor( Math.log10(graphSize.x) ) );
-        var gridlineSpacingY = Math.pow(10, Math.floor( Math.log10(graphSize.y) ) );
+        let gridlineSpacingX = Math.pow(10, Math.floor( Math.log10(graphSize.x) ) );
+        let gridlineSpacingY = Math.pow(10, Math.floor( Math.log10(graphSize.y) ) );
 
         // adjust the gridline spacing to get a nice number of gridlines
         if      ( graphSize.x / gridlineSpacingX < 2.5 ) gridlineSpacingX /= 5;
@@ -416,10 +416,10 @@ class Graph {
         const firstGridlineY = Math.floor( -(this.originOffset.y + graphSize.y) / gridlineSpacingY ) * gridlineSpacingY;
 
         // keep adding grid lines at a spacing of gridlineSpacing until the whole graph is covered
-        for(var x = firstGridlineX; x < firstGridlineX + graphSize.x + gridlineSpacingX; x += gridlineSpacingX)
+        for(let x = firstGridlineX; x < firstGridlineX + graphSize.x + gridlineSpacingX; x += gridlineSpacingX)
             gridlines.x.push(x);
 
-        for(var y = firstGridlineY; y < firstGridlineY + graphSize.y + gridlineSpacingY; y += gridlineSpacingY)
+        for(let y = firstGridlineY; y < firstGridlineY + graphSize.y + gridlineSpacingY; y += gridlineSpacingY)
             if( Math.abs(y) > 1e-9 ) gridlines.y.push(y);
 
         return gridlines;
@@ -429,7 +429,7 @@ class Graph {
 
         // draw the x and y axes
 
-        this.ctx.lineWidth   = 3;
+        this.ctx.lineWidth   = 3 * this.dpr;
         this.ctx.strokeStyle = "black";
 
         this.drawVerticalLine(   this.originFixedInCanvas.x );
@@ -439,7 +439,7 @@ class Graph {
     drawGridlines(gridlinePositions) {
 
         // change style for gridlines
-        this.ctx.lineWidth   = 1;
+        this.ctx.lineWidth   = 1 * this.dpr;
         this.ctx.strokeStyle = "rgba(0, 0, 0, 0.3)";
 
         gridlinePositions.x.forEach( x => this.drawVerticalLine(   this.graphToCanvasX( x ) ) );
@@ -602,13 +602,13 @@ function graphjsDefaultDrawCurve(points, graph) {
 
     // set style
     graph.ctx.strokeStyle = "#54f330";
-    graph.ctx.lineWidth   = 2.5;
+    graph.ctx.lineWidth   = 2.5 * graph.dpr;
 
     graph.ctx.beginPath();
     graph.ctx.moveTo( points[0].x, points[0].y );
 
     // keep track of the last point that we drew
-    var lastDrawnPoint = points[0];
+    let lastDrawnPoint = points[0];
 
     for(point of points) {
 
@@ -629,17 +629,17 @@ function graphjsFormatNumber(x) {
     if( Math.abs(x) < 1e-10 ) return "0";
     
     // use x.toString unless number is very small or very big then use toExponential
-    var text = x.toString();
+    let text = x.toString();
     if( Math.abs(x) > 10000 || Math.abs(x) < 0.001 ) text = x.toExponential();
 
-    var fixed;
+    let fixed;
 
     // fix numbers like 57.5699999999995e+12
     const ninesRegexMatch = text.match( /(9|\.|\-){4,}(\d)*/ );
 
     if( ninesRegexMatch ) {
 
-        var incrementPower = false;
+        let incrementPower = false;
 
         // if start of string is nines (9.999932) then handle this case
         if( ninesRegexMatch.index == 0 ) {
@@ -662,7 +662,7 @@ function graphjsFormatNumber(x) {
         
         if( suffix ) {
 
-            var power = parseInt( suffix[2] )
+            let power = parseInt( suffix[2] )
 
             if(incrementPower) power += Math.abs(x) > 1 ? 1 : -1;
 
