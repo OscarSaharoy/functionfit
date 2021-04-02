@@ -11,6 +11,7 @@ class DropDown {
 
         // state for the DropDown - the selected element is stored in this.selected
         // and this.open is true when the dropdown is open
+        // this.ignoreFocus deactivates the focus event callbacks
         this.selected    = this.entries[initial];
         this.isOpen      = true;
         this.ignoreFocus = false;
@@ -56,7 +57,7 @@ class DropDown {
         // set ignoreFocus to true and set it back to false after the time it takes
         // to close the dropdown
         this.ignoreFocus = true;
-        setTimeout( () => this.ignoreFocus = false, 220 )
+        setTimeout( () => this.ignoreFocus = false, 220 );
     }
 
     focusin( event ) {
@@ -79,10 +80,10 @@ class DropDown {
         // if the menu is closed open it or if it is open close it 
         if( this.isOpen ) {
 
-            this.close();
-
-            // need to ignore focus events while the menu is closing or it will re open
+            // need to ignore focus events while the menu is closing or it will reopen
             this.ignoreFocusWhileClosing();
+
+            this.close();
         }
 
         else this.open();
@@ -90,19 +91,18 @@ class DropDown {
 
     keydown( event, elm = null ) {
 
-        // detec space or enter keypress
-        if( event.key == " " || event.key == "Enter" ) {
+        // only act if its a space or enter keypress
+        if( event.key != " " && event.key != "Enter" ) return;
 
-            // avoid browser scrolling down on space
-            event.preventDefault();
+        // avoid browser scrolling down on space
+        event.preventDefault();
 
-            // select the focused element and close the dropdown
-            this.selected = elm;
-            this.close();
+        // select the focused element and close the dropdown
+        this.selected = elm;
+        this.close();
 
-            // call the onchange function
-            this.onchange( this.index )
-        }
+        // call the onchange function
+        this.onchange( this.index )
     }
 
     clickEntry( event, elm = null ) {

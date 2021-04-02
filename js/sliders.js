@@ -1,3 +1,4 @@
+// Oscar Saharoy 2021
 
 class Slider {
     

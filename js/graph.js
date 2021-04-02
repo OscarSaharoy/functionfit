@@ -169,7 +169,7 @@ class Graph {
         this.originFixedInCanvas  = vec2.zero;
         this.mousePos             = vec2.zero; // position of the mouse hovering over the graph
         this.preventPanning       = false;
-        this.dpr                  = 0;
+        this.dpr                  = window.devicePixelRatio || 1;
         this.rem = parseInt( getComputedStyle(document.documentElement).fontSize )
                  * window.devicePixelRatio || 1;
         
@@ -240,7 +240,6 @@ class Graph {
     resize() {
 
         // set canvas to have 1:1 canvas pixel to screen pixel ratio
-        this.dpr = window.devicePixelRatio || 1;
         this.boundingRect = this.canvas.getBoundingClientRect();
         this.canvasSize.setxy( this.boundingRect.width * this.dpr, this.boundingRect.height * this.dpr );
 
@@ -350,13 +349,13 @@ class Graph {
         if( !event.ctrlKey ) {
 
             // have to shift the origin to make the mouse the centre of enlargement
-            this.originOffset.x       += event.offsetX * zoomAmount * this.canvasToGraphScale.x;
+            this.originOffset.x       += event.offsetX * this.dpr * zoomAmount * this.canvasToGraphScale.x;
             this.canvasToGraphScale.x *= 1 + zoomAmount;
         }
 
         if( !event.shiftKey ) {
 
-            this.originOffset.y       += event.offsetY * zoomAmount * this.canvasToGraphScale.y;
+            this.originOffset.y       += event.offsetY * this.dpr * zoomAmount * this.canvasToGraphScale.y;
             this.canvasToGraphScale.y *= 1 + zoomAmount;
         }
     }
@@ -400,16 +399,17 @@ class Graph {
 
         // size of the graph in graph space
         const graphSize = vec2.mul( this.canvasSize, this.canvasToGraphScale ).abs();
+        const compensatedSize = vec2.div(graphSize, this.canvasSize ).scaleBy( this.rem * 45 );
 
         // calculate space between the gridlines in graph units
-        let gridlineSpacingX = Math.pow(10, Math.floor( Math.log10(graphSize.x) ) );
-        let gridlineSpacingY = Math.pow(10, Math.floor( Math.log10(graphSize.y) ) );
+        let gridlineSpacingX = Math.pow( 10, Math.floor( Math.log10(compensatedSize.x) ) );
+        let gridlineSpacingY = Math.pow( 10, Math.floor( Math.log10(compensatedSize.y) ) );
 
         // adjust the gridline spacing to get a nice number of gridlines
-        if      ( graphSize.x / gridlineSpacingX < 2.5 ) gridlineSpacingX /= 5;
-        else if ( graphSize.x / gridlineSpacingX < 6   ) gridlineSpacingX /= 2;
-        if      ( graphSize.y / gridlineSpacingY < 2.5 ) gridlineSpacingY /= 5;
-        else if ( graphSize.y / gridlineSpacingY < 6   ) gridlineSpacingY /= 2;
+        if      ( compensatedSize.x / gridlineSpacingX < 2.5 ) gridlineSpacingX /= 5;
+        else if ( compensatedSize.x / gridlineSpacingX < 6   ) gridlineSpacingX /= 2;
+        if      ( compensatedSize.y / gridlineSpacingY < 2.5 ) gridlineSpacingY /= 5;
+        else if ( compensatedSize.y / gridlineSpacingY < 6   ) gridlineSpacingY /= 2;
 
         // calculate positions of the most negative gridline in graph space
         const firstGridlineX = Math.floor( - this.originOffset.x                / gridlineSpacingX ) * gridlineSpacingX;
@@ -419,6 +419,7 @@ class Graph {
         for(let x = firstGridlineX; x < firstGridlineX + graphSize.x + gridlineSpacingX; x += gridlineSpacingX)
             gridlines.x.push(x);
 
+        // no gridline at y=0 to avoid drawing the 0 label twice
         for(let y = firstGridlineY; y < firstGridlineY + graphSize.y + gridlineSpacingY; y += gridlineSpacingY)
             if( Math.abs(y) > 1e-9 ) gridlines.y.push(y);
 

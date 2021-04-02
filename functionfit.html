@@ -33,7 +33,7 @@
     <div class="button-box">
 
         <div id="points-holder">
-            <textarea spellcheck="false" id="points-textarea" oninput="updatePoints()"></textarea>
+            <textarea spellcheck="false" id="points-textarea"></textarea>
         </div>
 
         <div class="dropdown" id="function-dropdown">
@@ -92,15 +92,17 @@
 
         <div class="codes">
             <h4> JavaScript<br>(editable) </h4>
-            <textarea spellcheck="false" class="codebox" id="js"></textarea>
+            <textarea spellcheck="false" class="codebox" id="code-js"></textarea>
             <h4> C/C++ </h4>
-            <textarea spellcheck="false" class="codebox" id="cc++"></textarea>
+            <textarea spellcheck="false" class="codebox" id="code-cc++"></textarea>
             <h4> C# </h4>
-            <textarea spellcheck="false" class="codebox" id="c#"></textarea>
+            <textarea spellcheck="false" class="codebox" id="code-c#"></textarea>
             <h4> Python </h4>
-            <textarea spellcheck="false" class="codebox" id="python"></textarea>
+            <textarea spellcheck="false" class="codebox" id="code-python"></textarea>
             <h4> HLSL </h4>
-            <textarea spellcheck="false" class="codebox" id="hlsl"></textarea>
+            <textarea spellcheck="false" class="codebox" id="code-hlsl"></textarea>
+            <h4> variable name </h4>
+            <input type="text" value="x" id="variable-name-input"/>
         </div>  
     </div>
 
@@ -111,11 +113,16 @@
 
 </div>
 
-<script type="text/javascript" src="graph.js"      > </script>
-<script type="text/javascript" src="dropDown.js"   > </script>
-<script type="text/javascript" src="sliders.js"    > </script>
-<script type="text/javascript" src="quickMaths.js" > </script>
-<script type="text/javascript" src="functionfit.js"> </script>
+<script type="text/javascript" src="js/quickMaths.js"        > </script>
+<script type="text/javascript" src="js/regressionModels.js"  > </script>
+<script type="text/javascript" src="js/graph.js"             > </script>
+<script type="text/javascript" src="js/dropDown.js"          > </script>
+<script type="text/javascript" src="js/sliders.js"           > </script>
+<script type="text/javascript" src="js/graphInteractions.js" > </script>
+<script type="text/javascript" src="js/pointsTextarea.js"    > </script>
+<script type="text/javascript" src="js/variableNameInput.js" > </script>
+<script type="text/javascript" src="js/editJSFunction.js"    > </script>
+<script type="text/javascript" src="js/functionfit.js"       > </script>
 
 </body>
 

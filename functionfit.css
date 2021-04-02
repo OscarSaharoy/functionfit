@@ -228,8 +228,9 @@ p {
     justify-self: center;
 }
 
-.options input[type=number] {
-	padding: 0.5rem;
+input[type=number],
+input[type=text] {
+	padding: 0.5rem 0.9rem;
     border: 3px solid #8decd3;
 	border-radius: 1rem;
     background: transparent;
@@ -240,11 +241,13 @@ p {
 	font-size: 1rem;
 }
 
-.options input[type=number]:hover {
+input[type=number]:hover,
+input[type=text]:hover {
 	border: 3px solid #44EBF8;	
 }
 
-.options input[type=number]:focus {
+input[type=number]:focus,
+input[type=text]:focus {
 	box-shadow: 0 0 0 2px #44EBF8;
 } 
 
@@ -286,6 +289,14 @@ textarea:focus {
 	text-align: center;
 	align-self: center;
 	justify-self: center;
+}
+
+#variable-name-input {
+    width: 16rem; 
+    font-size: 1rem;
+    justify-self: left; 
+    text-align: left;
+    font-family: Consolas, monospace;
 }
 
 a {

@@ -67,6 +67,18 @@ class Matrix {
         this.data = new Array(rows*cols).fill(0);
     }
 
+    static from( data ) {
+
+        const rows   = data.length;
+        const cols   = data[0].length;
+        const length = rows * cols;
+
+        const temp = new Matrix( rows, cols );
+        temp.data = data.flat();
+
+        return temp;
+    }
+
     index(row, col) {
 
         return row*this.c + col;
@@ -80,6 +92,11 @@ class Matrix {
     get(row, col) {
 
         return this.data[row*this.c + col];
+    }
+
+    getRow( row ) {
+
+        return this.data.slice( row*this.c, (row+1)*this.c );
     }
 
     T() {
@@ -159,6 +176,45 @@ class Matrix {
         return temp;
     }
 
+    invf() {
+
+        const MI = 8;
+    }
+
+    plu() {
+
+        // lu of 3x3
+
+        let u1 = this.data[0];
+        let u2 = this.data[1];
+        let u3 = this.data[2];
+        let l1 = 1;
+        let l4 = this.data[3] / u1;
+        let l7 = this.data[6] / u1;
+
+        let u4 = 0;
+        let u5 = this.data[4] - u2 * l4;
+        let u6 = this.data[5] - u3 * l4;
+        let l2 = 0;
+        let l5 = 1;
+        let l8 = ( this.data[7] - u2 * l4 ) / u5;
+
+        let u7 = 0;
+        let u8 = 0;
+        let u9 = this.data[8];
+        let l3 = 0;
+        let l6 = 0;
+        let l9 = 1;
+
+        console.log( l1, l2, l3 )
+        console.log( l4, l5, l6 )
+        console.log( l7, l8, l9 )
+        console.log()
+        console.log( u1, u2, u3 )
+        console.log( u4, u5, u6 )
+        console.log( u7, u8, u9 )
+    }
+
     minor(r1, c1) {
 
         // temporary matrix to store result
@@ -220,3 +276,9 @@ function matMul(M1, M2) {
 
     return temp;
 }
+
+
+const b = Matrix.from( [[1,2,3],[3,4,5],[4,5,6]] );
+console.log( b.getRow(2) )
+
+b.plu();
