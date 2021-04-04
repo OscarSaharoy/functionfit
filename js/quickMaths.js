@@ -178,7 +178,7 @@ class Matrix {
 
     invf() {
 
-        const MI = 8;
+        // const I = Matrix.identity()
     }
 
     plu() {
@@ -277,8 +277,11 @@ function matMul(M1, M2) {
     return temp;
 }
 
+const add = (v1, v2) => v1.map( (x,i) => x + v2[i] );
+const sub = (v1, v2) => v1.map( (x,i) => x - v2[i] );
+const mul = (v1, S ) => v1.map( (x,i) => x * S     );
+
 
 const b = Matrix.from( [[1,2,3],[3,4,5],[4,5,6]] );
-console.log( b.getRow(2) )
 
-b.plu();
+b.invf();

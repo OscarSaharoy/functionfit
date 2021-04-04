@@ -8,18 +8,25 @@ let curveFunction  = x => NaN;
 let pointFunction  = point => true;
 let regressionFunction = () => {};
 
-// setup some variables
-const polynomialTerms = document.getElementById("polynomial-terms");
-const fourierTerms    = document.getElementById("fourier-terms"   );
-const fourierStart    = document.getElementById("fourier-start"   );
-const fourierEnd      = document.getElementById("fourier-end"     );
+// get the sliders
+const polynomialTerms    = new Slider( "polynomial-terms-slider", null, "polynomial-terms-number" );
+const fourierTerms       = new Slider( "fourier-terms-slider"   , null, "fourier-terms-number"    );
+const fourierStart       = new Slider( "fourier-start-slider"   , null, "fourier-start-number"    );
+const fourierEnd         = new Slider( "fourier-end-slider"     , null, "fourier-end-number"      );
+
+polynomialTerms.onchange = updateModel;
+fourierTerms.onchange    = updateModel;
+fourierStart.onchange    = updateModel;
+fourierEnd.onchange      = updateModel;
+
 
 const regressionFunctions = [() => (linearRegression()),
                              () => (polynomialRegression( parseFloat(polynomialTerms.value) )),
                              () => (powerlawRegression()),
                              () => (bellcurveRegression()),
                              () => (exponentialRegression()),
-                             () => (fourierSeries(parseFloat(fourierStart.value), parseFloat(fourierEnd.value), parseFloat(fourierTerms.value)))];
+                             () => (fourierSeries(parseFloat(fourierStart.value), parseFloat(fourierEnd.value), parseFloat(fourierTerms.value))),
+                             () => {} ];
 
 const equationLabels = Array.from( document.querySelectorAll( ".equation-label" ) );
 const codeboxes      = Array.from( document.getElementsByClassName("codebox") ); 
@@ -45,8 +52,10 @@ function equationSelect( idx ) {
     // set regression mode and update regression model
     regressionFunction = regressionFunctions[ idx ];
     updateModel();
-}
 
+    // handle the custom regression case
+    customRegressionEnabled = functionDropdown.value == "custom";
+}
 
 function updateModel() {
 

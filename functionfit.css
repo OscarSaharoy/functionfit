@@ -68,6 +68,11 @@ p {
     font-size: 1.4rem;
 }
 
+.maths sub {
+    display: inline;
+    font-size: 1.2rem;
+}
+
 .maths em {
     font-style: normal;
     display: inline;

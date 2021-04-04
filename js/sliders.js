@@ -2,39 +2,57 @@
 
 class Slider {
     
-    constructor( sliderId, numberId = null) {
+    constructor( sliderId, pId = null, inputId = null ) {
         
         // get the slider and throw an error if it wasn't found
         this.slider = document.getElementById( sliderId );
         if( !this.slider ) throw `LogSlider instatiated with invalid slider id: "${sliderId}"`;
         
-        // get the number and throw an error if it wasn't found
-        this.number = numberId ? document.getElementById( numberId ) : null;
-        if( numberId && !this.number ) throw `LogSlider instatiated with invalid number id: "${numberId}"`;
+        // get the p and throw an error if it wasn't found
+        this.p = pId ? document.getElementById( pId ) : null;
+        if( pId && !this.p ) throw `LogSlider instatiated with invalid p id: "${pId}"`;
         
-        // add a method to get the slider's value
-        this.getValue = () => +this.slider.value;
-        this.value = 0;
+        // get the input and throw an error if it wasn't found
+        this.input = inputId ? document.getElementById( inputId ) : null;
+        if( inputId && !this.input ) throw `LogSlider instatiated with invalid input id: "${inputId}"`;
         
-        this.onSliderChange = () => this.value = this.number.innerHTML = this.getValue();
-        this.onSliderChange();
+        // this.value can be accessed as the slider's value
+        this.value = +this.slider.value;
         
         // connect the callback to be called when the slider is changed
-        this.slider.addEventListener( "input", () => this.onSliderChange() );
-        
-        // map this.addEventListener onto the slider
-        this.addEventListener = (...args) => this.slider.addEventListener(...args);
+        this.slider.addEventListener( "input", () => this.sliderChange() );
+
+        // if there's an input connect it to its callback
+        this.input?.addEventListener( "input", () => this.inputChange()  );
         
         // decimal places of the slider
         this.decimalPlaces = this.slider.step.split(".")[1]?.length || 0;
-        
-        // forces a value into the slider (self.value may not equal self.slider.value)
-        this.forceValue = newValue => {
-            
-            this.slider.value = newValue;
-            this.value = newValue;
-            this.number.innerHTML = +newValue.toFixed(this.decimalPlaces);
-        };
+
+        // add an onchange callback that can be set by the user
+        this.onchange = () => {};
+    }
+
+    sliderChange() {
+
+        // get the value from the slider
+        this.value = +this.slider.value;
+
+        // put the value into the p or input if they were supplied
+        if( this.p     ) this.p.innerHTML = this.value;
+        if( this.input ) this.input.value = this.value;
+
+        this.onchange();
+    }
+
+    inputChange() {
+
+        // gethe value from the input
+        this.value = +this.input.value;
+
+        // put the value into the slider
+        this.slider.value = this.value;
+
+        this.onchange();
     }
 }
 

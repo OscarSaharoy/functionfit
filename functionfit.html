@@ -55,34 +55,34 @@
         <p class="equation-label" id="exponential-label"> <span class="maths"> y = ax<sup>b</sup> </span> </p>
         <p class="equation-label" id="bellcurve-label"> <span class="maths"> y = ab<sup>-x²</sup> </span> </p>
         <p class="equation-label" id="powerlaw-label"> <span class="maths"> y = ab<sup>x</sup> </span> </p>
-        <p class="equation-label" id="fourerseries-label"> <span class="maths"> y = ∑<span class="under"> n </span> a <em>cos(</em><span class="small">nπ + φ</span><em>)</em> </span> </p>
+        <p class="equation-label" id="fourerseries-label"> <span class="maths"> y = ∑<span class="under"> n </span> a <em>cos(</em><span class="small"> xω<sub>n</sub> + φ </span><em>)</em> </span> </p>
         <p class="equation-label" id="custom-label"> up to you! </p>
 
         <div class="options" id="polynomial-options">
 
             <h4> polynomial order </h4>
-            <input type="range" value="4" min="0" max="8" step="1" onchange="updateModel()"> </input>
-            <input id="polynomial-terms" type="number" value="4" min="0" max="8" step="1" onchange="updateModel()"> </input>
+            <input id="polynomial-terms-slider" type="range"  value="4" min="0" max="8" step="1"> </input>
+            <input id="polynomial-terms-number" type="number" value="4" min="0" max="8" step="1"> </input>
         </div>
 
         <div class="options" id="fourierseries-options">
 
             <h4> frequency limit </h4>
-            <input type="range" value="3" min="0" max="50" step="1" onchange="updateModel()"> </input>
-            <input id="fourier-terms" type="number" value="3" onchange="updateModel()">
+            <input id="fourier-terms-slider" type="range"  value="3"  min="0"  max="8" step="1"    > </input>
+            <input id="fourier-terms-number" type="number" value="3"  min="0"  max="8" step="1"    > </input>
 
             <h4> sample period start </h4>
-            <input type="range"> </input>
-            <input id="fourier-start" type="number" value="-1" step="0.01" onchange="updateModel()">
+            <input id="fourier-start-slider" type="range"  value="-1" min="-5" max="5" step="0.01" > </input>
+            <input id="fourier-start-number" type="number" value="-1" min="-5" max="5" step="0.01" > </input>
 
             <h4> sample period end </h4>
-            <input type="range"> </input>
-            <input id="fourier-end" type="number" value="1" step="0.01" onchange="updateModel()">
+            <input id="fourier-end-slider"   type="range"  value="1"  min="-5" max="5" step="0.01" > </input>
+            <input id="fourier-end-number"   type="number" value="1"  min="-5" max="5" step="0.01" > </input>
         </div>
 
         <div class="options" id="custom-options">
             <h4> formula - use a, b, c etc for variables </h4>
-            <textarea spellcheck="false" id="custom-textarea">x => ( x + a ) / b</textarea>
+            <textarea spellcheck="false" id="custom-textarea">a / (b + c * d ** x) + e</textarea>
         </div>
 
     </div>
@@ -102,7 +102,7 @@
             <h4> HLSL </h4>
             <textarea spellcheck="false" class="codebox" id="code-hlsl"></textarea>
             <h4> variable name </h4>
-            <input type="text" value="x" id="variable-name-input"/>
+            <input spellcheck="false" type="text" value="x" id="variable-name-input"/>
         </div>  
     </div>
 
@@ -113,6 +113,7 @@
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.js" integrity="sha512-bd8Oth+p1rTn+/iUFHsSozuYn7JpmH59vMWe6L+M3huScB/SMTXWkQoME3Ytk0sbGJ40VGp2mO2b8K8FNrewfQ==" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/quickMaths.js"        > </script>
 <script type="text/javascript" src="js/regressionModels.js"  > </script>
 <script type="text/javascript" src="js/graph.js"             > </script>

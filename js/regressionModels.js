@@ -134,8 +134,8 @@ function polynomialRegression(order) {
     // initialise variables and matrices
     let n = dataPoints.length;
 
-    let x  = new Matrix(order+1, n);
-    let y  = new Matrix(n, 1);
+    let x  = math.zeros(order+1, n);
+    let y  = math.zeros(n, 1);
 
     // populate matrices
 
@@ -147,14 +147,14 @@ function polynomialRegression(order) {
 
             let xiToPower = Math.pow(dataPoints[p].x, i);
 
-            x.set(i, p, xiToPower);
-            y.set(p, 0, dataPoints[p].y);
+            x._data[i][p] = xiToPower;
+            y._data[p][0] = dataPoints[p].y;
         }
     }
 
     // calculate polynomial coefficients
-    let c = matMul(matMul( (matMul( x, x.T() )).inv() , x), y).data;
-
+    let c = math.transpose( math.multiply( math.multiply( math.inv( math.multiply( x, math.transpose(x) ) ), x), y) )._data[0];
+    
     // set curve function and point function
     curveFunction = x => c.reduce( (acc, cur, idx) => ( acc + cur*Math.pow(x, idx) ) );
     pointFunction = p => true;
@@ -182,12 +182,17 @@ function polynomialRegression(order) {
 
 function fourierSeries(startX, endX, maxFreq) {
 
-    // period is the length of 1 Complexete cycle
+    // make sure we have the limits the right way around
+    [startX, endX] = [Math.min( startX, endX ), Math.max( startX, endX )];
+
+    // period is the length of 1 complete cycle
     let period = endX - startX;
 
     // get sorted list of points within the target period
     let fourierPoints = dataPoints.filter( (point) => (point.x >= startX && point.x <= startX+period) );
     fourierPoints.sort( (a,b) => (a.x < b.x ? -1 : 1) );
+
+    if( !fourierPoints.length ) return;
 
     // add extra point onto the end of the sequence to make function loop smoothly
     fourierPoints.push(new vec2(fourierPoints[0].x+period, fourierPoints[0].y));
@@ -204,13 +209,13 @@ function fourierSeries(startX, endX, maxFreq) {
         for(let i=0; i<fourierPoints.length-1; ++i) {
 
             // setup some variables
-            let x_a = fourierPoints[i].x;
-            let y_a = fourierPoints[i].y;
-            let x_b = fourierPoints[i+1].x;
-            let y_b = fourierPoints[i+1].y;
+            const x_a = fourierPoints[i].x;
+            const y_a = fourierPoints[i].y;
+            const x_b = fourierPoints[i+1].x;
+            const y_b = fourierPoints[i+1].y;
 
             // line is the interpolation function between the 2 points
-            let grad = (y_b-y_a)/(x_b-x_a);
+            const grad = (y_b-y_a)/(x_b-x_a);
             const line = (x) => (grad*(x-x_a) + y_a);
 
             let u = 0;
@@ -218,7 +223,7 @@ function fourierSeries(startX, endX, maxFreq) {
             // increment value of integral
             if(freq != 0) {
 
-                let freq2pi = 2*freq*Math.PI/period;
+                const freq2pi = 2*freq*Math.PI/period;
 
                 u = comAdd(
                         comSub(
@@ -277,52 +282,3 @@ function fourierSeries(startX, endX, maxFreq) {
     codeboxes[4].value = outputCode(cpos, coshlsl).replaceAll("x", variableName).replaceAll("+ -", "- ");
 }
 
-
-// function iteration variables
-let beta  = new Array(10).fill(1);
-const freakedExponential = (x, coeffs) => (coeffs[0]*Math.pow(coeffs[1], Math.pow(x, coeffs[2])) + coeffs[3]);
-const sigmoid = (x, coeffs) => ( coeffs[0] / (coeffs[1] + coeffs[2] * Math.pow(coeffs[3], x)) + coeffs[4] );
-
-function functionIteration(nbeta = 4, func = freakedExponential) {
-
-    // check for nans in parameters
-    for(let i=0; i<nbeta; ++i) {
-
-        beta[i] = isNaN(beta[i]) ? 1 : beta[i];
-    }
-
-    for(let iteration=0; iteration<1000; ++iteration) {
-
-        // array containing sum of partial derivatives of error with respect to each parameter
-        let dbeta = new Array(nbeta).fill(0);
-
-        // loop over datapoints and find partial derivative of error from that point with respect to each parameter
-        for(let i=0; i<dataPoints.length; ++i) {
-
-            let xi = dataPoints[i].x;
-            let yi = dataPoints[i].y;
-
-            for(let j=0; j<nbeta; ++j) {
-
-                // create parameter lists with 1 element perturbed for 2 sided gradient approximation
-                // todo symbolic differentiation
-                let betaplus  = beta.slice();
-                let betaminus = beta.slice();
-                betaplus[j]  += 1e-4;
-                betaminus[j] -= 1e-4;
-
-                // increment partial derivative
-                dbeta[j] += (Math.pow(yi - func(xi, betaplus), 2) - Math.pow(yi - func(xi, betaminus), 2)) / 2e-4;
-            }
-        }
-
-        // change the parameters proportional to their derivative
-        for(let j=0; j<nbeta; ++j) {
-
-            beta[j] -= 0.001*dbeta[j];
-        }
-    }
-
-    const iteratedFunction = (x) => (func(x, beta));
-    return [iteratedFunction, (point) => (true)];
-}
