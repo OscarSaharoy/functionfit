@@ -67,7 +67,7 @@ function updateModel() {
     regressionFunction();
 
     // in case the JS code box has an error clear it
-    unsetJSCodeError();
+    unsetErrorBorder( jsBox );
 }
 
 equationSelect(0);

@@ -68,21 +68,27 @@
         <div class="options" id="fourierseries-options">
 
             <h4> frequency limit </h4>
-            <input id="fourier-terms-slider" type="range"  value="3"  min="0"  max="8" step="1"    > </input>
-            <input id="fourier-terms-number" type="number" value="3"  min="0"  max="8" step="1"    > </input>
+            <input id="fourier-terms-slider" type="range"  value="3"  min="0"  max="8" step="1"    /> 
+            <input id="fourier-terms-number" type="number" value="3"  min="0"  max="8" step="1"    /> 
 
             <h4> sample period start </h4>
-            <input id="fourier-start-slider" type="range"  value="-1" min="-5" max="5" step="0.01" > </input>
-            <input id="fourier-start-number" type="number" value="-1" min="-5" max="5" step="0.01" > </input>
+            <input id="fourier-start-slider" type="range"  value="-1" min="-5" max="5" step="0.01" /> 
+            <input id="fourier-start-number" type="number" value="-1" min="-5" max="5" step="0.01" /> 
 
             <h4> sample period end </h4>
-            <input id="fourier-end-slider"   type="range"  value="1"  min="-5" max="5" step="0.01" > </input>
-            <input id="fourier-end-number"   type="number" value="1"  min="-5" max="5" step="0.01" > </input>
+            <input id="fourier-end-slider"   type="range"  value="1"  min="-5" max="5" step="0.01" /> 
+            <input id="fourier-end-number"   type="number" value="1"  min="-5" max="5" step="0.01" /> 
         </div>
 
         <div class="options" id="custom-options">
             <h4> formula - use a, b, c etc for variables </h4>
             <textarea spellcheck="false" id="custom-textarea">a / (b + c * d ** x) + e</textarea>
+
+            <div id="var-slider-template" class="var-slider-holder">
+                <h4></h4>
+                <input class="var-slider" type="range"  value="0" min="-1" max="1" />
+                <input class="var-number" type="number" value="0" />
+            </div>
         </div>
 
     </div>
@@ -122,6 +128,7 @@
 <script type="text/javascript" src="js/graphInteractions.js" > </script>
 <script type="text/javascript" src="js/pointsTextarea.js"    > </script>
 <script type="text/javascript" src="js/variableNameInput.js" > </script>
+<script type="text/javascript" src="js/customRegression.js"  > </script>
 <script type="text/javascript" src="js/editJSFunction.js"    > </script>
 <script type="text/javascript" src="js/functionfit.js"       > </script>
 

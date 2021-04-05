@@ -2,13 +2,24 @@
 
 // get the js code box and add the callback
 const jsBox = document.getElementById( "code-js" );
-jsBox.addEventListener( "input", handleJSCodeInput );
+jsBox.addEventListener( "input"   , handleJSCodeInput );
+jsBox.addEventListener( "focusin" , () => inJSBox = true  );
+jsBox.addEventListener( "focusout", () => inJSBox = false );
 
-function unsetJSCodeError() {
+let inJSBox = false;
+
+function setErrorBorder( box ) {
+
+    // set the box's border to be red
+    box.style.boxShadow = "0 0 0 2px #F84444";
+    box.style.border    = "3px solid #F84444";
+}
+
+function unsetErrorBorder( box ) {
 
     // unset the box's red border if there is one
-    jsBox.style.boxShadow = "";
-    jsBox.style.border    = "";
+    box.style.boxShadow = "";
+    box.style.border    = "";
 }
 
 function handleJSCodeInput() {
@@ -21,8 +32,11 @@ function handleJSCodeInput() {
 
         let detectedVariableName;
 
-        // if the user is using the current variable name then use that
-        if( funcString.includes( variableName ) ) detectedVariableName = variableName;
+        // regex that matches if the current variableName is in the string
+        const matchVariableName = new RegExp( `(^|\\W)${variableName}(\\W|$)`,"" );
+
+        // if the user is using the current variableName then use that
+        if( funcString.match( matchVariableName ) ) detectedVariableName = variableName;
 
         // otherwise detect the variable name being used in the function
         else detectedVariableName = funcString.match( /[a-zA-Z_$][a-zA-Z_$0-9]*/ )[0];
@@ -37,7 +51,7 @@ function handleJSCodeInput() {
         curveFunction = evaluatedFunction;
 
         // worked so clear the error outline
-        unsetJSCodeError();
+        unsetErrorBorder( jsBox );
 
     }
     catch( err ) {
@@ -46,8 +60,8 @@ function handleJSCodeInput() {
         console.log(err);
 
         // give the code box a red highlight to show the error
-        jsBox.style.boxShadow = "0 0 0 2px #F84444";
-        jsBox.style.border    = "3px solid #F84444";
+        setErrorBorder( jsBox );
+
         return;
     }
 }

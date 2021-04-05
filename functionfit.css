@@ -261,6 +261,14 @@ input[type=text]:focus {
     grid-column: 2 / 4;
 }
 
+.var-slider-holder {
+    grid-column: 1 / 4;
+    width: 100%;
+    grid-gap: 1.12rem;
+    grid-template-columns: 2rem auto 8rem;
+    align-items: center;
+}
+
 .codes {
 	padding-top: 0.9rem;
 	grid-template-columns: 5rem 1fr;

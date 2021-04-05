@@ -6,18 +6,18 @@ class Slider {
         
         // get the slider and throw an error if it wasn't found
         this.slider = document.getElementById( sliderId );
-        if( !this.slider ) throw `LogSlider instatiated with invalid slider id: "${sliderId}"`;
+        if( !this.slider ) throw `Slider instatiated with invalid slider id: "${sliderId}"`;
         
         // get the p and throw an error if it wasn't found
         this.p = pId ? document.getElementById( pId ) : null;
-        if( pId && !this.p ) throw `LogSlider instatiated with invalid p id: "${pId}"`;
+        if( pId && !this.p ) throw `Slider instatiated with invalid p id: "${pId}"`;
         
         // get the input and throw an error if it wasn't found
         this.input = inputId ? document.getElementById( inputId ) : null;
-        if( inputId && !this.input ) throw `LogSlider instatiated with invalid input id: "${inputId}"`;
+        if( inputId && !this.input ) throw `Slider instatiated with invalid input id: "${inputId}"`;
         
-        // this.value can be accessed as the slider's value
-        this.value = +this.slider.value;
+        // this._value is the current value of the slider
+        this._value = this.sliderValue;
         
         // connect the callback to be called when the slider is changed
         this.slider.addEventListener( "input", () => this.sliderChange() );
@@ -28,31 +28,61 @@ class Slider {
         // decimal places of the slider
         this.decimalPlaces = this.slider.step.split(".")[1]?.length || 0;
 
+        // method that can be overridden to change number formatting
+        this.format = x => x.toString();
+
         // add an onchange callback that can be set by the user
         this.onchange = () => {};
+    }
+
+    get sliderValue() {
+
+        return +this.slider.value;
+    }
+
+    set sliderValue( newValue ) {
+
+        this.slider.value = newValue;
     }
 
     sliderChange() {
 
         // get the value from the slider
-        this.value = +this.slider.value;
+        this._value = this.sliderValue;
 
         // put the value into the p or input if they were supplied
-        if( this.p     ) this.p.innerHTML = this.value;
-        if( this.input ) this.input.value = this.value;
+        if( this.p     ) this.p.innerHTML = this.format( this._value );
+        if( this.input ) this.input.value = this.format( this._value );
 
         this.onchange();
     }
 
     inputChange() {
 
-        // gethe value from the input
-        this.value = +this.input.value;
+        // get the value from the input
+        this._value = +this.input.value;
 
         // put the value into the slider
-        this.slider.value = this.value;
+        this.sliderValue = this._value;
 
         this.onchange();
+    }
+
+    get value() {
+
+        return this._value;
+    }
+
+    set value( newValue ) {
+
+        this._value = newValue;
+        
+        // put the value into the slider
+        this.sliderValue = this._value;
+
+        // put the value into the p or input if they were supplied
+        if( this.p     ) this.p.innerHTML = this.format( this._value );
+        if( this.input ) this.input.value = this.format( this._value );
     }
 }
 
@@ -97,5 +127,35 @@ class LogSlider extends Slider {
         
         // map the initial slider value into log space
         this.slider.value = Math.log( initialValue );
+    }
+}
+
+class InfiniteRangeSlider extends Slider {
+
+    constructor( sliderId, pId = null, inputId = null) {
+        
+        super( sliderId, pId, inputId );
+
+        // slider goes between almost -1 and 1
+        this.slider.max =  1 - 1e-7;
+        this.slider.min = -1 + 1e-7;
+
+        // set slider step very small to allow good control
+        this.slider.setAttribute( "step", "0.000000001" );
+
+        // set the format function to use 3sf
+        this.format = x => x.toPrecision(3);
+    }
+
+    get sliderValue() {
+
+        const x = +this.slider.value;
+        return - 50 / (x**3-1) - 50 / (x**3+1)
+    }
+
+    set sliderValue( newValue ) {
+
+        const y = newValue;
+        this.slider.value = Math.cbrt( ((y**2 + 50**2)**0.5) / y - 50 / y );
     }
 }
