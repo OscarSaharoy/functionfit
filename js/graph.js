@@ -239,6 +239,10 @@ class Graph {
 
     resize() {
 
+        // document rem may have changed
+        this.rem = parseInt( getComputedStyle(document.documentElement).fontSize )
+                 * window.devicePixelRatio || 1;
+
         // set canvas to have 1:1 canvas pixel to screen pixel ratio
         this.boundingRect = this.canvas.getBoundingClientRect();
         this.canvasSize.setxy( this.boundingRect.width * this.dpr, this.boundingRect.height * this.dpr );
@@ -397,7 +401,7 @@ class Graph {
         // object to hold the gridlines in x and y directions
         const gridlines = { x: [], y: [] };
 
-        // size of the graph in graph space
+        // size of the graph in graph space, compensated for size on screen
         const graphSize = vec2.mul( this.canvasSize, this.canvasToGraphScale ).abs();
         const compensatedSize = vec2.div(graphSize, this.canvasSize ).scaleBy( this.rem * 45 );
 
@@ -514,7 +518,7 @@ class Graph {
 
         // draw number
         const text       = graphjsFormatNumber(graphY);
-        const textHeight = this.rem * this.dpr;
+        const textHeight = this.rem;
         const textWidth  = this.ctx.measureText( text ).width;
         const textX      = canvasX+textHeight+textWidth > this.canvasSize.x ? this.canvasSize.x-textHeight/2-textWidth : canvasX+textHeight/2;
         const textY      = canvasY - textHeight / 2;

@@ -89,7 +89,7 @@ function drawPoint(graph, colour, pos) {
 
     // setup ctx style
     graph.ctx.strokeStyle = colour;
-    graph.ctx.lineWidth   = 3 * graph.dpr;
+    graph.ctx.lineWidth   = 0.19 * graph.rem;
     graph.ctx.fillStyle   = "white";
 
     // draw circle at pos
@@ -118,7 +118,7 @@ function drawCurve(graph) {
 
     // set style for curve
     graph.ctx.strokeStyle = "#8decd3";
-    graph.ctx.lineWidth   = 3 * graph.dpr;
+    graph.ctx.lineWidth   = 0.19 * graph.rem;
     graph.ctx.beginPath();
 
     // loop over the range of x currently visible and plot the curve at 300 points

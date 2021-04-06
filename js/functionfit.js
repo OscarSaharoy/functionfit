@@ -1,7 +1,9 @@
 // Oscar Saharoy 2021
 
+// todo: fix layout on desktop, fix graph zooming, add help screen, add sharpness to fourier fit
+
 // points on the graph
-let dataPoints = [new vec2(-2.0, -0.5), new vec2(-0.8, 0.2), new vec2(0, -0.3), new vec2(0.6, 0.5), new vec2(2.0, 1.5)];
+let dataPoints = [new vec2(-2.0, -0.5), new vec2(-0.8, 0.2), new vec2(0, -0.3), new vec2(0.6, 0.5), new vec2(2.0, 1)];
 
 // initial function values
 let curveFunction  = x => NaN;
