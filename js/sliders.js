@@ -81,8 +81,11 @@ class Slider {
         this.sliderValue = this._value;
 
         // put the value into the p or input if they were supplied
-        if( this.p     ) this.p.innerHTML = this.format( this._value );
-        if( this.input ) this.input.value = this.format( this._value );
+        if( this.p )
+            this.p.innerHTML = this.format( this._value );
+        
+        if( this.input && this.input != document.activeElement )
+            this.input.value = this.format( this._value );
     }
 }
 

@@ -23,99 +23,109 @@
         <canvas width=600 height=350 id="graphjs"> </canvas>
     </div>
 
-    <div class="button-titles">
+    <div class="ui-box">
 
-        <h3> points </h3>
-        <h3> fit </h3>
-        <h3> form </h3>
-    </div>
-    
-    <div class="button-box">
+        <div class="button-titles">
 
-        <div id="points-holder">
-            <textarea spellcheck="false" id="points-textarea"></textarea>
+            <h3> points </h3>
+            <h3> fit </h3>
+            <h3> form </h3>
         </div>
+        
+        <div class="button-box">
 
-        <div class="dropdown" id="function-dropdown">
-            <!-- inner div provides the border -->
-            <div class="inner" tabindex="0">
-                <!-- all dropdown elements need tabindex="0" to be focusable!! -->
-                <p tabindex="0" class="hidden">linear</p>
-                <p tabindex="0" class="hidden">polynomial</p>
-                <p tabindex="0" class="hidden">power law</p>
-                <p tabindex="0" class="hidden">bell curve</p>
-                <p tabindex="0" class="hidden">exponential</p>
-                <p tabindex="0" class="hidden">fourier series</p>
-                <p tabindex="0" class="hidden">custom</p>
+            <div id="points-holder">
+                <textarea spellcheck="false" id="points-textarea"></textarea>
             </div>
-        </div>
 
-        <p class="equation-label" id="linear-label"> <span class="maths"> y = ax + b </span> </p>
-        <p class="equation-label" id="polynomial-label"> <span class="maths"> y = a + bx + cx² + ... </span> </p>
-        <p class="equation-label" id="exponential-label"> <span class="maths"> y = ax<sup>b</sup> </span> </p>
-        <p class="equation-label" id="bellcurve-label"> <span class="maths"> y = ab<sup>-x²</sup> </span> </p>
-        <p class="equation-label" id="powerlaw-label"> <span class="maths"> y = ab<sup>x</sup> </span> </p>
-        <p class="equation-label" id="fourerseries-label"> <span class="maths"> y = ∑<span class="under"> n </span> a <em>cos(</em><span class="small"> xω<sub>n</sub> + φ </span><em>)</em> </span> </p>
-        <p class="equation-label" id="custom-label"> up to you! </p>
-
-        <div class="options" id="polynomial-options">
-
-            <h4> polynomial order </h4>
-            <input id="polynomial-terms-slider" type="range"  value="4" min="0" max="8" step="1"> </input>
-            <input id="polynomial-terms-number" type="number" value="4" min="0" max="8" step="1"> </input>
-        </div>
-
-        <div class="options" id="fourierseries-options">
-
-            <h4> frequency limit </h4>
-            <input id="fourier-terms-slider" type="range"  value="3"  min="0"  max="8" step="1"    /> 
-            <input id="fourier-terms-number" type="number" value="3"  min="0"  max="8" step="1"    /> 
-
-            <h4> sample period start </h4>
-            <input id="fourier-start-slider" type="range"  value="-1" min="-5" max="5" step="0.01" /> 
-            <input id="fourier-start-number" type="number" value="-1" min="-5" max="5" step="0.01" /> 
-
-            <h4> sample period end </h4>
-            <input id="fourier-end-slider"   type="range"  value="1"  min="-5" max="5" step="0.01" /> 
-            <input id="fourier-end-number"   type="number" value="1"  min="-5" max="5" step="0.01" /> 
-        </div>
-
-        <div class="options" id="custom-options">
-            <h4> formula - use a, b, c etc for variables </h4>
-            <textarea spellcheck="false" id="custom-textarea">a / (b + c * d ** x) + e</textarea>
-
-            <div id="var-slider-template" class="var-slider-holder">
-                <h4></h4>
-                <input class="var-slider" type="range"  value="0" min="-1" max="1" />
-                <input class="var-number" type="number" value="0" />
+            <div class="dropdown" id="function-dropdown">
+                <!-- inner div provides the border -->
+                <div class="inner" tabindex="0">
+                    <!-- all dropdown elements need tabindex="0" to be focusable!! -->
+                    <p tabindex="0" class="hidden">linear</p>
+                    <p tabindex="0" class="hidden">polynomial</p>
+                    <p tabindex="0" class="hidden">power law</p>
+                    <p tabindex="0" class="hidden">bell curve</p>
+                    <p tabindex="0" class="hidden">exponential</p>
+                    <p tabindex="0" class="hidden">fourier series</p>
+                    <p tabindex="0" class="hidden">custom</p>
+                </div>
             </div>
+
+            <p class="equation-label" id="linear-label"> <span class="maths"> y = ax + b </span> </p>
+            <p class="equation-label" id="polynomial-label"> <span class="maths"> y = a + bx + cx² + ... </span> </p>
+            <p class="equation-label" id="exponential-label"> <span class="maths"> y = ax<sup>b</sup> </span> </p>
+            <p class="equation-label" id="bellcurve-label"> <span class="maths"> y = ab<sup>-x²</sup> </span> </p>
+            <p class="equation-label" id="powerlaw-label"> <span class="maths"> y = ab<sup>x</sup> </span> </p>
+            <p class="equation-label" id="fourerseries-label"> <span class="maths"> y = ∑<span class="under"> n </span> a <em>cos(</em><span class="small"> xω<sub>n</sub> + φ </span><em>)</em> </span> </p>
+            <p class="equation-label" id="custom-label"> up to you! </p>
+
+            <div class="options" id="polynomial-options">
+
+                <h4> polynomial order </h4>
+                <input id="polynomial-terms-slider" type="range"  value="4" min="0" max="8" step="1"> </input>
+                <input id="polynomial-terms-number" type="number" value="4" min="0" max="8" step="1"> </input>
+            </div>
+
+            <div class="options" id="fourierseries-options">
+
+                <h4> frequency limit </h4>
+                <input id="fourier-terms-slider" type="range"  value="3"   min="0"  max="8" step="1"    /> 
+                <input id="fourier-terms-number" type="number" value="3"   min="0"  max="8" step="1"    /> 
+
+                <h4> sample period start </h4>
+                <input id="fourier-start-slider" type="range"  value="-1"  min="-5" max="5" step="0.01" /> 
+                <input id="fourier-start-number" type="number" value="-1"  min="-5" max="5" step="0.01" /> 
+
+                <h4> sample period end </h4>
+                <input id="fourier-end-slider"   type="range"  value="1"   min="-5" max="5" step="0.01" /> 
+                <input id="fourier-end-number"   type="number" value="1"   min="-5" max="5" step="0.01" />
+
+                <!-- <h4> sharpness </h4>
+                <input id="fourier-sharp-slider" type="range"  value="0.5" min="0"  max="1" step="0.01" /> 
+                <input id="fourier-sharp-number" type="number" value="0.5" min="0"  max="1" step="0.01" />  -->
+            </div>
+
+            <div class="options" id="custom-options">
+                <h4> formula - use a, b, c etc for variables </h4>
+                <textarea spellcheck="false" id="custom-textarea">a / ( b + c * Math.pow( d, x ) ) + e</textarea>
+
+                <div id="var-slider-template" class="var-slider-holder">
+                    <h4></h4>
+                    <input class="var-slider" type="range"  value="0" min="-1" max="1" />
+                    <input class="var-number" type="number" value="0" />
+                </div>
+
+                <button id="reset-vars"> reset all </button>
+            </div>
+
         </div>
 
+        <div class="code-box">
+            <h3> function code </h3>   
+
+            <div class="codes">
+                <h4> JavaScript<br>(editable) </h4>
+                <textarea spellcheck="false" class="codebox" id="code-js"></textarea>
+                <h4> C/C++ </h4>
+                <textarea spellcheck="false" readonly class="codebox" id="code-cc++"></textarea>
+                <h4> C# </h4>
+                <textarea spellcheck="false" readonly class="codebox" id="code-c#"></textarea>
+                <h4> Python </h4>
+                <textarea spellcheck="false" readonly class="codebox" id="code-python"></textarea>
+                <h4> HLSL </h4>
+                <textarea spellcheck="false" readonly class="codebox" id="code-hlsl"></textarea>
+                <h4> variable name </h4>
+                <input spellcheck="false" type="text" value="x" id="variable-name-input"/>
+            </div>  
+        </div>
+
+        <footer>
+            <h3> made by oscar saharoy </h3>
+            <a href="https://www.github.com/OscarSaharoy" target="_blank"> <h3> github </h3> </a> 
+        </footer>
+
     </div>
-
-    <div class="code-box">
-        <h3> function code </h3>   
-
-        <div class="codes">
-            <h4> JavaScript<br>(editable) </h4>
-            <textarea spellcheck="false" class="codebox" id="code-js"></textarea>
-            <h4> C/C++ </h4>
-            <textarea spellcheck="false" class="codebox" id="code-cc++"></textarea>
-            <h4> C# </h4>
-            <textarea spellcheck="false" class="codebox" id="code-c#"></textarea>
-            <h4> Python </h4>
-            <textarea spellcheck="false" class="codebox" id="code-python"></textarea>
-            <h4> HLSL </h4>
-            <textarea spellcheck="false" class="codebox" id="code-hlsl"></textarea>
-            <h4> variable name </h4>
-            <input spellcheck="false" type="text" value="x" id="variable-name-input"/>
-        </div>  
-    </div>
-
-    <footer>
-        <h3> made by oscar saharoy </h3>
-        <a href="https://www.github.com/OscarSaharoy" target="_blank"> <h3> github </h3> </a> 
-    </footer>
 
 </div>
 
@@ -128,8 +138,8 @@
 <script type="text/javascript" src="js/graphInteractions.js" > </script>
 <script type="text/javascript" src="js/pointsTextarea.js"    > </script>
 <script type="text/javascript" src="js/variableNameInput.js" > </script>
-<script type="text/javascript" src="js/customRegression.js"  > </script>
 <script type="text/javascript" src="js/editJSFunction.js"    > </script>
+<script type="text/javascript" src="js/customRegression.js"  > </script>
 <script type="text/javascript" src="js/functionfit.js"       > </script>
 
 </body>

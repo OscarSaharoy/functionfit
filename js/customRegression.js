@@ -9,6 +9,7 @@ const varNames  = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' ];
 const varRegexs = varNames.map( c => new RegExp( `\\b${c}\\b`, "g" ) );
 let beta        = Array(10).fill(1);
 let customRegressionEnabled = false;
+let customRegressionPaused  = false;
 
 
 // get the formula textarea and add callback
@@ -17,8 +18,9 @@ const customTexterea = document.querySelector( "#custom-textarea" );
 customTexterea.addEventListener( "input", customChange );
 
 
-// make an array of all the variable sliders
+// make an array of all the variable sliders and those in use
 const sliders = [];
+let activeSliders = [];
 
 // and an array of the divs that hold them
 const sliderDivs = [];
@@ -47,13 +49,22 @@ for( let c of varNames ) {
     // make an infiniteRangeSlider and push it to the sliders array
     const slider      = new InfiniteRangeSlider( `${c}-slider`, null, `${c}-number` );
     sliders.push( slider );
-}
 
-// link each slider to change its variable
-sliders.forEach( (elm, i) => elm.onchange = () => beta[i] = elm.value );
+    // setup all the sliders to pause the regression when they are used
+    slider.slider.addEventListener( "pointerdown", () => customRegressionPaused = true  );
+    slider.slider.addEventListener( "pointerup"  , () => customRegressionPaused = false );
+}
 
 // get rid of the template slider holder
 sliderTemplate.remove();
+
+// get the var reset button and add it into the DOM
+const resetButton = document.querySelector( "#reset-vars" );
+resetButton.remove();
+customOptions.appendChild( resetButton );
+
+// when reset is pressed, map beta array to small random numbers
+resetButton.onpointerdown = () => beta = beta.map( v => Math.random() * 2 - 1 ); 
 
 
 function customChange() {
@@ -77,19 +88,33 @@ function customChange() {
         // otherwise try to detect the variable name being used in the function
         else detectedVariableName = funcString.match( /(?:[^\w.](?!\bMath\.\w+\b))(([l-zA-Z_$](?=$| |\W))|([a-zA-Z_$][a-zA-Z0-9_$]+))/ )[1];
 
-        // loop over the single letters in the function string and replace them with elements of beta
+        // reset some vars to be set now
         nVars = 0;
+        activeSliders = [];
+
         for( let i = 0; i < varNames.length; ++i ) {
 
+            // get the regex for this var
             const re = varRegexs[i];
 
+            // if the var is found in the function string then
             if( funcString.match( re ) ) {
 
+                // replace it with an element of the beta array
                 funcString = funcString.replaceAll( re, `beta[${nVars}]` );
+                
+                // show the slider for this variable and add its slider to activsSliders
                 sliderDivs[i].style.display = "grid";
-                sliderDivs[i].onchange = 
+                activeSliders.push( sliders[i] );
 
+                // we have found 1 more var
                 ++nVars;
+            }
+
+            else {
+
+                // for vars that aren't in the function, hide the slider
+                sliderDivs[i].style.display = "none";
             }
         }
 
@@ -105,9 +130,10 @@ function customChange() {
         // worked so clear the error outline
         unsetErrorBorder( customTexterea );
 
-        // show only the relavant sliders
-        sliderDivs.forEach( (elm,i) => elm.style.display = customTexterea.value.match(varRegexs[i]) ? "grid" : "none" );
+        // link each slider to change its variable
+        activeSliders.forEach( (elm, i) => elm.onchange = () => beta[i] = elm.value );
     }
+
     catch( err ) {
 
         // console log the error
@@ -124,12 +150,12 @@ function customRegressionLoop() {
     // run this again next frame
     requestAnimationFrame( () => customRegressionLoop() );
 
-    // only run when customRegressionEnabled is true and the user isn't typing in the JS box
-    if( !customRegressionEnabled || inJSBox ) return;
+    // only run when customRegressionEnabled is true and custom regression isnt paused
+    if( !customRegressionEnabled || customRegressionPaused ) return;
 
     // only do 8000 inner loops to keep performance
     let innerLoops = 0;
-    while( innerLoops < 8000 && nVars ) {
+    while( innerLoops < 8000 && nVars && dataPoints.length ) {
 
         // array containing sum of partial derivatives of error with respect to each parameter
         let dbeta = new Array(nVars).fill(0);
@@ -173,9 +199,6 @@ function customRegressionLoop() {
     curveFunction = customFunc;
     pointFunction = () => true;
 
-    // we cant make code for all languages, only JS
-    codeboxes.forEach( elm => elm.value = "unavailable :(" );
-
     // get the function string from the customTextarea
     let funcString = customFunc.toString();
 
@@ -190,7 +213,8 @@ function customRegressionLoop() {
     codeboxes[0].value = funcString.replaceAll( / *\+ *- */g, " - " ).replaceAll( / +/g, " " );
 
     // set the values of all the var sliders
-    sliders.forEach( (elm, i) => elm.value = beta[i] );
+    activeSliders.forEach( (elm, i) => elm.value = beta[i] );
 }
 
+customChange();
 customRegressionLoop();
