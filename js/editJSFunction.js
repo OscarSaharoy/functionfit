@@ -3,10 +3,8 @@
 // get the js code box and add the callback
 const jsBox = document.getElementById( "code-js" );
 jsBox.addEventListener( "input"   , handleJSCodeInput );
-jsBox.addEventListener( "focusin" , () => inJSBox = true  );
-jsBox.addEventListener( "focusout", () => inJSBox = false );
-
-let inJSBox = false;
+jsBox.addEventListener( "focusin" , () => customRegressionPaused = true  );
+jsBox.addEventListener( "focusout", () => customRegressionPaused = false );
 
 function setErrorBorder( box ) {
 

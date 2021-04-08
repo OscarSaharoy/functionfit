@@ -41,8 +41,8 @@ function powerlawRegression() {
     const slnxlny = sum( powerlawPoints, p => Math.log(p.x) * Math.log(p.y) );
     const N       = powerlawPoints.length;
 
-    const b = ( slnxlny/slnx - slny/N ) / ( slnx2/slnx - slnx/N );
-    const a = Math.exp( slnxlny/slnx - b*slnx2/slnx );
+    let b = ( slnxlny/slnx - slny/N ) / ( slnx2/slnx - slnx/N );
+    let a = Math.exp( slnxlny/slnx - b*slnx2/slnx );
 
     // set curve function and point function
     curveFunction = x => a * x ** b;
