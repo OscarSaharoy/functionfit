@@ -16,6 +16,23 @@
     <div class="title-box">
         <h2> function.fit </h2>
         <h3> visualise and generate functions </h3>
+
+        <button id="help-button" type="button" ontouchstart="">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" height="100" width="100" class="kf1">
+                <path id="dot" d="m 48.022097,82.90284 c 1.192314,-0.02147 2.173956,-0.831358 2.185365,-1.947038 0.01141,-1.11568 -0.973891,-2.270335 -2.185365,-2.278068 -1.247604,-0.008 -2.049902,1.054459 -2.03911,2.278072 0.01079,1.223613 1.240139,1.949581 1.984264,1.946573 C 57.764626,82.851586 72.086342,84.492783 81.015625,76 91.923664,65.625191 88.415613,45.865135 71.020037,29.046254 L 30.007844,69.947962 c -3.245469,3.236726 -4.128897,8.694076 0.573223,11.799844 4.30204,2.841515 11.355956,1.079354 17.44103,1.155034 z" style="opacity:1;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1" />
+                <path id="qmark" d="M 29.387754,29.397748 70.99794,71.030719 C 85.063599,67.076558 71.518598,50.054823 65.044194,64.589689 61.518139,72.50559 47.419888,77.236862 48,66.0625 L 47.97278,56.999069 C 52.628822,58.147585 74.845345,50.150007 66.202876,27.78672 61.644451,15.991323 38.55285,10.038018 29.387754,29.397748 Z" style="fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4    ;stroke-opacity:1" />
+            </svg>
+        </button>
+
+        <p id="help-text" class="hide"> 
+            Welcome to function.fit! This is a tool to make fitting equations to data points simple. <br> <br>
+            You can pan and zoom the graph by dragging and scrolling (or pinching) and you can place, move and delete points by tapping and dragging them. <br> <br>
+            You can also edit the points on the graph from the text box labelled "points" - you can edit their positions or paste in a set of points. <br> <br>
+            You can pick from a few different fit types from the dropdown menu labelled "fit". The first 6 are linear regression and have closed form solutions, but the last one (custom) is nonlinear regression by an iterative process. <br> <br>
+            The first 6 will therefore run much faster and more stably but you might get a slightly less accurate fit due to the variable transformation applied. <br> <br>
+            To fit a custom function, you can write the form of your equation as a JavaScript expression in the formula text box. You can use normal js such as the Math library as this expression gets evaled during the iteration (make sure all your data points agree with the expression you've written, for example don't use points with negative x in a square root function). The letters a - j are reserved for the parameters that will be optimised over, and you can call your independant variable anything else. <br> <br>
+            Once you've got your function, you can copy the code from the text boxes at the bottom to get it into your project :)
+        </p>
     </div>
 
     <div class="graph-box">
@@ -86,7 +103,7 @@
             </div>
 
             <div class="options" id="custom-options">
-                <h4> formula - use a, b, c etc for variables </h4>
+                <h4> formula - use a, b, c etc for parameters </h4>
                 <textarea spellcheck="false" id="custom-textarea">a / ( b + c * Math.pow( d, x ) ) + e</textarea>
 
                 <div id="var-slider-template" class="var-slider-holder">
@@ -126,6 +143,10 @@
 
     </div>
 
+    <div id="drag-handle"> <svg viewbox="-1 -3 2 6" id="drag-handle-line">
+        <line x1="0" y1="-3" x2="0" y2="3" style="stroke:black; stroke-width:0.15" />
+    </svg> </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.3.0/math.js" integrity="sha512-bd8Oth+p1rTn+/iUFHsSozuYn7JpmH59vMWe6L+M3huScB/SMTXWkQoME3Ytk0sbGJ40VGp2mO2b8K8FNrewfQ==" crossorigin="anonymous"></script>
@@ -135,6 +156,7 @@
 <script type="text/javascript" src="js/dropDown.js"          > </script>
 <script type="text/javascript" src="js/sliders.js"           > </script>
 <script type="text/javascript" src="js/graphInteractions.js" > </script>
+<script type="text/javascript" src="js/dragHandle.js"        > </script>
 <script type="text/javascript" src="js/pointsTextarea.js"    > </script>
 <script type="text/javascript" src="js/variableNameInput.js" > </script>
 <script type="text/javascript" src="js/editJSFunction.js"    > </script>

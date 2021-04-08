@@ -1,7 +1,7 @@
 // Oscar Saharoy 2021
 
 // return the first point found close to mousePos
-const areClose = (point1, point2) => vec2.sqrDist( graph.graphToCanvas(point1), graph.graphToCanvas(point2) ) < graph.rem*25
+const areClose = (point1, point2) => vec2.sqrDist( graph.graphToCanvas(point1), graph.graphToCanvas(point2) ) < graph.rem*45
 const getClosePoint = mousePos => dataPoints.reduce( (acc, val) => acc ? acc : areClose(mousePos, val) ? val : null, null );
 
 // some variables used for interaction with the graph
@@ -70,7 +70,7 @@ function pointermove() {
 function pointerup() {
 
     // if the pointer has moved there's nothing we need to do
-    if( pointerHasMoved ) return;
+    if( pointerHasMoved || !graph.meanPointerOnGraph ) return;
 
     // if we are dragging a point but haven't moved the cursor, delete that point
     if( draggedPoint )

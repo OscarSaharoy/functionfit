@@ -364,7 +364,7 @@ class Graph {
         }
     }
 
-    redraw() {
+    redraw( once = false ) {
 
         // clear canvas
         this.ctx.clearRect(0, 0, this.canvasSize.x, this.canvasSize.y);
@@ -393,7 +393,7 @@ class Graph {
         this.userDrawFunctions.forEach( func => func(this) );
         
         // continue draw loop
-        requestAnimationFrame( () => this.redraw() );
+        if( !once ) requestAnimationFrame( () => this.redraw() );
     }
 
     getGridlinePositions() {
