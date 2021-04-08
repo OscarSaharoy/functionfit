@@ -326,8 +326,8 @@ class Graph {
             this.originOffset.incBy( vec2.sub( this.meanPointer, this.lastMeanPointer ).mulBy( this.canvasToGraphScale ) );
             
             // call the wheel function with a constructed event to zoom with pinch
-            this.wheel( { offsetX: this.meanPointer.x,
-                          offsetY: this.meanPointer.y,                
+            this.wheel( { offsetX: this.meanPointer.x / this.dpr,
+                          offsetY: this.meanPointer.y / this.dpr,
                           deltaY: (this.lastPointerSpread - this.pointerSpread) * 2.7 } );
         }
 
