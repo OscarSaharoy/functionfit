@@ -120,9 +120,9 @@ function drawCurve(graph) {
     graph.ctx.strokeStyle = "#8decd3";
     graph.ctx.lineWidth   = 0.19 * graph.rem;
     graph.ctx.beginPath();
-
-    // loop over the range of x currently visible and plot the curve at 300 points
-    for( let x = minX; x < maxX; x += width/300 ) {
+    
+    // loop over the range of x currently visible and plot the curve at a spacing of 3*dpr pixels
+    for( let x = minX; x < maxX; x += 3*graph.dpr * graph.canvasToGraphScale.x ) {
 
         // get y coord at that value of x
         let canvasY = graph.graphToCanvasY( curveFunction(x) );
@@ -132,7 +132,7 @@ function drawCurve(graph) {
 
         graph.ctx.lineTo( graph.graphToCanvasX(x), canvasY );
     }
-
+    
     graph.ctx.stroke();
 }
 

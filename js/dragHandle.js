@@ -21,6 +21,10 @@ function dragHandleLoop() {
 
     requestAnimationFrame( dragHandleLoop );
 
+    // if we have stopped using the desktop media query reset the gridTemplateColumns
+    if( !window.matchMedia('screen and (min-width:1200px)').matches && central.style.gridTemplateColumns ) 
+        central.style.gridTemplateColumns = "";
+
     // only act if the dragHandle is being dragged
     if( !dragHandleClicked ) return;
 
