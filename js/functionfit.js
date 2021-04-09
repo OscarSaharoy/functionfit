@@ -2,7 +2,7 @@
 
 if( navigator.userAgent.indexOf("Firefox") > -1) alert("Please consider using chrome/edge for better performance, firefox is slow for some reason :(");
 
-// todo: fix graph zooming, add sharpness to fourier fit, improve performance in custom regression
+// todo: add sharpness to fourier fit, improve performance in custom regression
 
 // points on the graph
 let dataPoints = [ new vec2(-2.0, -0.5), new vec2(-0.8, 0.2), new vec2(0, -0.3), new vec2(0.6, 0.5), new vec2(2.0, 1) ];
