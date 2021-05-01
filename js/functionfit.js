@@ -5,7 +5,7 @@ if( navigator.userAgent.indexOf("Firefox") > -1) alert("Please consider using ch
 // todo: add sharpness to fourier fit, improve performance in custom regression
 
 // points on the graph
-let dataPoints = [ new vec2(-2.0, -0.5), new vec2(-0.8, 0.2), new vec2(0, -0.3), new vec2(0.6, 0.5), new vec2(2.0, 1) ];
+let dataPoints = [ new vec2(-1.5, 3), new vec2(-0.25, 0.7), new vec2(0.4, 2), new vec2(3, 0.1), new vec2(0.8, 0.8) ];
 
 // initial function values
 let curveFunction  = x => NaN;
