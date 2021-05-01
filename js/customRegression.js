@@ -53,7 +53,7 @@ for( let c of varNames ) {
     // setup all the sliders to pause the regression when they are used
     slider.slider.addEventListener( "pointerdown", () => customRegressionPaused = true  );
     slider.slider.addEventListener( "pointerup"  , () => customRegressionPaused = false );
-    slider.slider.addEventListener( "focusout"   , () => customRegressionPaused = false );
+    slider.slider.addEventListener( "touchend"   , () => customRegressionPaused = false );
 }
 
 // get rid of the template slider holder

@@ -140,7 +140,7 @@ function drawCurve(graph) {
 const graph = new Graph("graphjs");
 
 // centre the graph but after all the other code runs
-setTimeout( () => graph.centre = vec2.zero, 0 );
+// setTimeout( () => graph.centre = vec2.zero, 0 );
 
 // add our draw functions and callbacks onto the graph
 graph.userDrawFunctions.push( drawCurve, drawPoints );
