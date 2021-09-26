@@ -7,3 +7,4 @@ Place your points, select your function options and an optimized function will b
 ## [Web App Link](https://codepen.io/oscarsaharoy/full/eYggrme)
 
 ![demo](https://github.com/OscarSaharoy/functionfit/blob/master/gif.gif)
+![screenshot](https://github.com/OscarSaharoy/functionfit/blob/master/functionfit.JPG)
